@@ -1,5 +1,8 @@
 /* =========================
    RESET + BASE
+#1b1b1b - Cinza escuro
+#6b6b6b - Cinza claro
+#f5f6f7 - Verdinho azulado bem clarinho
 ========================= */
 * {
   margin: 0;
@@ -25,6 +28,11 @@ img {
 
 /* =========================
    HEADER FIXO (TELA)
+#ffffff - Branco
+#1b1b1b - Cinza escuro
+#6b6b6b - Cinza claro
+#f5f6f7 - Verdinho azulado bem clarinho
+
 ========================= */
 .header {
   position: fixed !important;
@@ -47,15 +55,22 @@ Se o logo ficou gigante, o problema está aqui
 .brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .logo {
-  width: 150px;
+  width: 1560px;
   height: auto;
 }
 
-/* #2C5B1E - verde  -  #EE232E - Vermelho */
+/* ---- 
+#2C5B1E - verde
+#EE232E - Vermelho
+#ffffff - Branco
+#1b1b1b - Cinza escuro
+#6b6b6b - Cinza claro
+#f5f6f7 - Verdinho azulado bem clarinho
+ ----*/
 
 .brand-text h1 {
   font-size: 24px;
@@ -69,14 +84,16 @@ Se o logo ficou gigante, o problema está aqui
   margin-top: 2px;
 }
 
+/* Menu */
 /* NAV */
 .nav {
   margin-top: 16px;
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 45px;
   flex-wrap: wrap;
 }
+
 
 .nav-link {
   text-decoration: none;
@@ -91,6 +108,19 @@ Se o logo ficou gigante, o problema está aqui
   color: #EE232E;
 }
 
+
+/* Salvar em PDF */
+/* ---- 
+#2C5B1E - verde
+#EE232E - Vermelho
+#ffffff - Branco
+#1b1b1b - Cinza escuro
+#6b6b6b - Cinza claro
+#f5f6f7 - Verdinho azulado bem clarinho
+#f0f0f0 - Cinza claro
+----*/
+
+
 .btn {
   margin-left: auto;
   background: #f0f0f0;
@@ -98,15 +128,22 @@ Se o logo ficou gigante, o problema está aqui
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  color: #2C5B1E;
+
 }
 
 .btn .it {
-  color: #c51e1e;
+  color: #EE232E;
 }
 
+
+
+
 /* Conteúdo abaixo do header fixo */
+/* “Empurrar” o site para baixo do cabeçalho: /* 
+
 .container {
-  padding: 140px 40px 60px 40px;
+  padding: 180px 40px 60px 40px;
   max-width: 1400px;
   margin: 0 auto;
 }
