@@ -350,12 +350,12 @@ img{ max-width: 100%; height: auto; display: block; }
   padding: 18px;
   border-top: 1px solid var(--border);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
 }
 
 .logo-footer{
-  height: 60px;
+  height: 90px;
   width: auto;
   object-fit: contain;
 }
