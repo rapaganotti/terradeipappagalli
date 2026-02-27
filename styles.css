@@ -147,11 +147,12 @@ Se o logo ficou gigante, o problema está aqui
 /* Conteúdo abaixo do header fixo */
 /* “Empurrar” o site para baixo do cabeçalho: /* 
 
-.container {
-  padding: 280px 40px 60px 40px;
+.container{
   max-width: 1400px;
-  margin: 20 auto;
+  margin: 0 auto;
+  padding: 180px 40px 60px; /* ajuste fino abaixo */
 }
+
 
 /* =========================
    SECTIONS
