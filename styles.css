@@ -118,7 +118,7 @@ img {
 
 /* (2) Ícones maiores */
 .section-icon {
-  width: 75px;
+  width: 85px;
   height: auto;
 }
 
@@ -292,8 +292,8 @@ img {
 }
 
 .logo-footer {
-  width: 180px;
-  height: auto;
+  width: auto;
+  height: 90px;
 }
 
 /* =========================
