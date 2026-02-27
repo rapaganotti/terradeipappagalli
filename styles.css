@@ -44,14 +44,14 @@ img {
 }
 
 .logo {
-  width: 90px;
+  width: 150px;
   height: auto;
 }
 
 .brand-text h1 {
   font-size: 24px;
   color: #163c2f;
-  line-height: 1.15;
+  line-height: 1;
 }
 
 .descriptor {
@@ -125,7 +125,7 @@ img {
 .section h2 {
   font-size: 26px;
   color: #163c2f;
-  line-height: 1.15;
+  line-height: 1;
 }
 
 .it-sub {
@@ -140,14 +140,14 @@ img {
 /* (1) Entrelinhas menores (PT e IT) */
 .about p {
   margin-bottom: 12px;
-  line-height: 1.35;
+  line-height: 1;
 }
 
 .about h3 {
   margin-top: 22px;
   margin-bottom: 10px;
   color: #163c2f;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 /* QUADRADO VERDE (Italiano) */
@@ -161,7 +161,7 @@ img {
 
 .quadrado p {
   margin-bottom: 12px;
-  line-height: 1.35; /* garante a mesma entrelinha menor dentro do quadro */
+  line-height: 1; /* garante a mesma entrelinha menor dentro do quadro */
 }
 
 /* =========================
@@ -191,11 +191,11 @@ img {
 }
 
 .input {
-  width: 260px;
+  width: 160px;
 }
 
 .select {
-  min-width: 240px;
+  min-width: 140px;
 }
 
 /* 4 por linha sem barra horizontal */
@@ -216,7 +216,7 @@ img {
 
 .card img {
   width: 100%;
-  height: 220px;
+  height: 200px;
   object-fit: contain;
   background: #f8f8f8;
   padding: 20px;
@@ -242,7 +242,7 @@ img {
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  line-height: 1.25;
+  line-height: 1;
 }
 
 /* (opcional) se houver badge de código separado no JS */
@@ -263,12 +263,12 @@ img {
 .contact-card h3 {
   color: #163c2f; /* títulos verdes */
   margin-bottom: 10px;
-  line-height: 1.2;
+  line-height: 1;
 }
 
 .contact-card p {
   font-size: 16px;
-  line-height: 1.35;
+  line-height: 1;
 }
 
 .contact-link {
@@ -395,7 +395,7 @@ img {
   }
 
   .print-banner {
-    width: 260px;
+    width: 160px;
     height: auto;
     margin: 0 auto;
   }
