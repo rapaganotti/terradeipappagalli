@@ -1,12 +1,3 @@
-/* =========================================================
-   Terra dei Pappagalli | styles.css (LIMPO e COMPLETO)
-   - Corrige CSS duplicado (o seu arquivo estava repetido)
-   - Cabeçalho fixo (sticky) sempre visível
-   - “Buracos” do grid: layout tipo masonry (CSS columns) SÓ nos produtos
-   - Categoria (badge) quebra em 2+ linhas (não corta)
-   - Impressão: 4 produtos por linha + cabeçalho de impressão só no PRINT
-========================================================= */
-
 :root{
   --bg: #ffffff;
   --text: #111827;
@@ -26,22 +17,19 @@ html, body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden; /* evita “barra” lateral quando algo estoura */
 }
 
 .muted{ color: var(--muted); }
 
-/* =========================
-   HEADER (fixo)
-========================= */
+/* ===== HEADER ===== */
 .header{
-  position: sticky;     /* fica fixo no topo */
+  position: sticky;
   top: 0;
-  z-index: 1000;
   background: rgba(255,255,255,.92);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
   padding: 14px 18px;
+  z-index: 10;
 }
 
 .brand{
@@ -54,7 +42,6 @@ html, body{
   width: 150px;
   height: auto;
   object-fit: contain;
-  display: block;
 }
 
 .brand-text h1{
@@ -68,9 +55,7 @@ html, body{
   color: var(--muted);
 }
 
-/* =========================
-   MENU
-========================= */
+/* ===== MENU ===== */
 .nav{
   display: flex;
   flex-wrap: wrap;
@@ -103,9 +88,7 @@ html, body{
 
 .btn:hover{ transform: translateY(-1px); }
 
-/* =========================
-   MAIN
-========================= */
+/* ===== MAIN ===== */
 .container{
   max-width: 1100px;
   margin: 0 auto;
@@ -139,44 +122,36 @@ html, body{
   height: 72px;
   width: auto;
   object-fit: contain;
-  display: block;
 }
 
-/* =========================================================
-   PRODUTOS: MASONRY (SEM BURACOS) APENAS NA GRID
-   - Importante: isso NÃO pode vazar para .section / .container
-========================================================= */
+/* ===== GRID ===== */
 .grid{
-  /* Masonry via columns */
-  column-count: 4;
-  column-gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 
-/* responsivo */
 @media (max-width: 1100px){
-  .grid{ column-count: 3; }
-}
-@media (max-width: 860px){
-  .grid{ column-count: 2; }
-}
-@media (max-width: 640px){
-  .grid{ column-count: 1; }
+  .grid{ grid-template-columns: repeat(3, 1fr); }
 }
 
-/* CARD precisa ser “inline-block” dentro de columns */
+@media (max-width: 860px){
+  .grid{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px){
+  .grid{ grid-template-columns: 1fr; }
+}
+
+/* ===== CARD ===== */
 .card{
-  display: inline-block;
-  width: 100%;
-  margin: 0 0 14px;            /* “gap” vertical do masonry */
   border: 1px solid var(--border);
   border-radius: 16px;
   background: var(--card);
   box-shadow: var(--shadow);
   overflow: hidden;
-
-  /* não quebrar no meio dentro das colunas */
-  break-inside: avoid;
-  page-break-inside: avoid;
+  display: flex;
+  flex-direction: column;
 }
 
 .card .thumb{
@@ -194,126 +169,70 @@ html, body{
   height: 100%;
   object-fit: contain;
   padding: 10px;
-  display: block;
 }
 
 .card .body{
-  padding: 12px 12px 14px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
-/* badges */
-.badges{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.badge{
-  font-size: 12px;
-  color: #0f172a;
-  background: #eef2ff;
-  border: 1px solid #e0e7ff;
-  padding: 3px 8px;
-  border-radius: 999px;
-
-  /* ESSENCIAL: não cortar texto */
-  max-width: 100%;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  line-height: 1.2;
-}
-
-.badge.cat{
-  background: #ecfdf5;
-  border-color: #d1fae5;
-  color: var(--green);
-}
-
-/* textos do card */
 .title{
   margin: 0;
   font-size: 15px;
-  line-height: 1.25;
   font-weight: 800;
 }
 
 .desc{
   margin: 0;
-  color: var(--muted);
   font-size: 13px;
-  line-height: 1.35;
+  color: var(--muted);
 }
 
 .it-name{
   margin: 0;
   font-size: 12px;
   color: var(--muted);
-  line-height: 1.2;
 }
 
 .prices{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px 10px;
-  margin-top: 4px;
+  gap: 6px;
 }
 
 .k{ font-size: 12px; color: var(--muted); }
 .v{ font-weight: 800; }
 
-/* =========================
-   CONTATO
-========================= */
+/* ===== CONTATO ===== */
 .contact{
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  margin-top: 10px;
 }
 
 @media (max-width: 900px){
   .contact{ grid-template-columns: 1fr; }
 }
 
-.contact a{
-  color: var(--green);
-  text-decoration: none;
-}
-
-.contact a:hover{ text-decoration: underline; }
-
-/* =========================
-   FOOTER
-========================= */
+/* ===== FOOTER ===== */
 .footer{
   padding: 18px;
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
-/* você disse que quer maior depois; deixei “ok” sem exagero */
-.logo-footer{
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
+/* ========================================================= */
+/* ====================  IMPRESSÃO  ======================== */
+/* ========================================================= */
 
-/* =========================================================
-   CABEÇALHO DE IMPRESSÃO (não aparece na tela)
-========================================================= */
 .print-header{
-  display: none;                 /* NUNCA aparece no site */
-  margin-bottom: 10px;
+  display: none;
+  margin-bottom: 12px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .print-banner{
@@ -322,14 +241,11 @@ html, body{
   display: block;
 }
 
-/* =========================================================
-   IMPRESSÃO (PDF)
-   - 4 produtos por linha
-   - sem buracos “masonry” no print (usa GRID de verdade)
-========================================================= */
 @media print{
+
   .no-print{ display: none !important; }
-  .header{ display: none !important; } /* header do site não entra */
+
+  .header{ display: none; }
 
   .container{
     max-width: none;
@@ -337,80 +253,41 @@ html, body{
   }
 
   .section{
-    border-bottom: none;
+    border: none;
     padding: 8px 0;
   }
 
-  /* Mostra o cabeçalho do PDF SOMENTE no print */
+  /* Mostra o cabeçalho do PDF */
   .print-header{
     display: block !important;
     break-after: avoid;
     page-break-after: avoid;
   }
 
-  /* no print, grid real (4 por linha) */
+  /* 4 produtos por linha no PDF */
   .grid{
-    column-count: unset !important;
-    column-gap: 0 !important;
-
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 
+  /* Não dividir card no meio */
   .card{
-    display: flex !important;  /* volta comportamento normal */
-    margin: 0 !important;
-    box-shadow: none !important;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
   }
 
-  .card .thumb{ height: 120px !important; }
+  .card .thumb{
+    height: 120px;
+  }
 
-  .title{ font-size: 13px !important; }
-  .desc{ font-size: 12px !important; }
-  .it-name{ font-size: 11px !important; }
-  .badge{ font-size: 11px !important; }
+  .title{ font-size: 14px; }
+  .desc{ font-size: 12px; }
+  .it-name{ font-size: 11px; }
 
-  a{ color: #000 !important; text-decoration: none !important; }
+  a{ text-decoration: none; color: #000; }
 
   @page{
     margin: 12mm;
   }
-}
-
-/* =========================================================
-   POPUP PROMO (sem borda extra)
-========================================================= */
-.promo-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.65);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 9999;
-}
-
-.promo-overlay.is-open{ display: flex; }
-
-.promo-box{
-  max-width: min(920px, 96vw);
-  max-height: 90vh;
-  cursor: pointer;
-}
-
-.promo-img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 14px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.45);
-  border: 0; /* garante que não aparece borda */
-}
-
-@media (max-width: 520px){
-  .promo-img{ border-radius: 12px; }
 }
