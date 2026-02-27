@@ -37,6 +37,13 @@ img {
   padding: 16px 40px;
 }
 
+
+/* =========================
+   .brand, .logo, .brand-text
+Controlam: alinhamento do logo com o texto, tamanho do logo, tamanho do título "Terra dei Pappagalli"
+Se o logo ficou gigante, o problema está aqui
+========================= */
+
 .brand {
   display: flex;
   align-items: center;
@@ -44,19 +51,19 @@ img {
 }
 
 .logo {
-  width: 140px;
+  width: 150px;
   height: auto;
 }
 
 .brand-text h1 {
   font-size: 24px;
-  color: #163c2f;
+  color: #2C5B1E;
   line-height: 1;
 }
 
 .descriptor {
   font-size: 14px;
-  color: #6b6b6b;
+  color: #EE232E;
   margin-top: 2px;
 }
 
