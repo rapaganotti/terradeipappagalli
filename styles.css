@@ -1,4 +1,6 @@
-/* RESET */
+/* =========================
+   RESET + BASE
+========================= */
 * {
   margin: 0;
   padding: 0;
@@ -12,10 +14,20 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* ================= HEADER FIXO ================= */
+img {
+  max-width: 100%;
+  display: block;
+}
 
+/* Helpers */
+.muted { color: #6b6b6b; }
+.no-print {}
+
+/* =========================
+   HEADER FIXO (TELA)
+========================= */
 .header {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,12 +35,6 @@ html, body {
   z-index: 9999;
   border-bottom: 1px solid #e2e2e2;
   padding: 16px 40px;
-}
-
-.container {
-  padding: 140px 40px 60px 40px; /* espaço para header fixo */
-  max-width: 1400px;
-  margin: 0 auto;
 }
 
 .brand {
@@ -39,25 +45,28 @@ html, body {
 
 .logo {
   width: 90px;
+  height: auto;
 }
 
 .brand-text h1 {
   font-size: 24px;
   color: #163c2f;
+  line-height: 1.15;
 }
 
 .descriptor {
   font-size: 14px;
   color: #6b6b6b;
+  margin-top: 2px;
 }
 
 /* NAV */
-
 .nav {
   margin-top: 16px;
   display: flex;
   align-items: center;
   gap: 30px;
+  flex-wrap: wrap;
 }
 
 .nav-link {
@@ -66,8 +75,9 @@ html, body {
   font-weight: bold;
 }
 
+.nav-link span { display: block; }
+
 .nav-link .it {
-  display: block;
   font-weight: normal;
   color: #c51e1e;
 }
@@ -85,8 +95,16 @@ html, body {
   color: #c51e1e;
 }
 
-/* ================= SECTIONS ================= */
+/* Conteúdo abaixo do header fixo */
+.container {
+  padding: 140px 40px 60px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
 
+/* =========================
+   SECTIONS
+========================= */
 .section {
   margin-bottom: 60px;
 }
@@ -98,60 +116,92 @@ html, body {
   margin-bottom: 20px;
 }
 
+/* (2) Ícones maiores */
 .section-icon {
-  width: 34px;
+  width: 46px;
+  height: auto;
 }
 
 .section h2 {
   font-size: 26px;
   color: #163c2f;
+  line-height: 1.15;
 }
 
 .it-sub {
   color: #c51e1e;
   font-size: 14px;
+  margin-top: 3px;
 }
 
-/* ================= ABOUT ================= */
-
+/* =========================
+   ABOUT (Quem somos)
+========================= */
+/* (1) Entrelinhas menores (PT e IT) */
 .about p {
-  margin-bottom: 16px;
-  line-height: 1.6;
+  margin-bottom: 12px;
+  line-height: 1.35;
 }
 
 .about h3 {
-  margin-top: 30px;
+  margin-top: 22px;
   margin-bottom: 10px;
   color: #163c2f;
+  line-height: 1.2;
 }
 
-/* QUADRADO VERDE ITALIANO */
-
+/* QUADRADO VERDE (Italiano) */
 .quadrado {
   background: #e9fdeb;
   border: 1px solid #cfe9d2;
   border-radius: 14px;
   padding: 20px;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 
-/* ================= PRODUTOS ================= */
+.quadrado p {
+  margin-bottom: 12px;
+  line-height: 1.35; /* garante a mesma entrelinha menor dentro do quadro */
+}
 
+/* =========================
+   PRINT HEADER (SÓ IMPRESSÃO)
+========================= */
+/* (3) Nunca aparece na tela */
+.print-header {
+  display: none;
+}
+
+/* =========================
+   PRODUTOS
+========================= */
 .filters {
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .input, .select {
   padding: 8px 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  background: #fff;
 }
 
+.input {
+  width: 260px;
+}
+
+.select {
+  min-width: 240px;
+}
+
+/* 4 por linha sem barra horizontal */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 30px;
 }
 
@@ -170,12 +220,14 @@ html, body {
   object-fit: contain;
   background: #f8f8f8;
   padding: 20px;
+  border-bottom: 1px solid #ececec;
 }
 
 .card-body {
   padding: 16px;
 }
 
+/* Badge/categoria sem cortar (quebra em 2 linhas se precisar) */
 .badge {
   background: #e9fdeb;
   border: 1px solid #cfe9d2;
@@ -185,10 +237,23 @@ html, body {
   font-size: 12px;
   display: inline-block;
   margin-bottom: 10px;
+
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
-/* ================= CONTATO ================= */
+/* (opcional) se houver badge de código separado no JS */
+.badge.code {
+  background: #eef2ff;
+  border-color: #dbe3ff;
+}
 
+/* =========================
+   CONTATO
+========================= */
 .contact {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -196,12 +261,14 @@ html, body {
 }
 
 .contact-card h3 {
-  color: #163c2f;
+  color: #163c2f; /* títulos verdes */
   margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .contact-card p {
   font-size: 16px;
+  line-height: 1.35;
 }
 
 .contact-link {
@@ -210,11 +277,12 @@ html, body {
 }
 
 .contact-link .it {
-  color: #c51e1e;
+  color: #c51e1e; /* italiano vermelho */
 }
 
-/* ================= FOOTER ================= */
-
+/* =========================
+   FOOTER
+========================= */
 .footer {
   margin-top: 60px;
   padding: 30px;
@@ -225,10 +293,12 @@ html, body {
 
 .logo-footer {
   width: 180px;
+  height: auto;
 }
 
-/* ================= POPUP ================= */
-
+/* =========================
+   POPUP
+========================= */
 .popup {
   position: fixed;
   inset: 0;
@@ -269,4 +339,75 @@ html, body {
   width: 34px;
   height: 34px;
   cursor: pointer;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 1200px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .header { padding: 14px 16px; }
+  .container { padding: 150px 16px 50px 16px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; }
+  .input { width: 100%; }
+  .select { width: 100%; }
+}
+
+/* =========================
+   IMPRESSÃO
+========================= */
+@media print {
+  /* remove coisas da tela na impressão */
+  .no-print,
+  .header,
+  .popup {
+    display: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+  }
+
+  .container {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* (3) Cabeçalho de impressão aparece apenas no print */
+  .print-header {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 0;
+    background: #fff;
+    border-bottom: 1px solid #e3e3e3;
+    text-align: center;
+  }
+
+  .print-banner {
+    width: 260px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* empurra o conteúdo pra baixo do header de impressão */
+  main {
+    margin-top: 90px;
+  }
+
+  /* evita cortes feios */
+  .card, .section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
