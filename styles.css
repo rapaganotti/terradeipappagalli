@@ -55,6 +55,8 @@ Se o logo ficou gigante, o problema está aqui
   height: auto;
 }
 
+/* #2C5B1E - verde  -  #EE232E - Vermelho */
+
 .brand-text h1 {
   font-size: 24px;
   color: #2C5B1E;
@@ -78,7 +80,7 @@ Se o logo ficou gigante, o problema está aqui
 
 .nav-link {
   text-decoration: none;
-  color: #1b1b1b;
+  color: #2C5B1E;
   font-weight: bold;
 }
 
@@ -86,7 +88,7 @@ Se o logo ficou gigante, o problema está aqui
 
 .nav-link .it {
   font-weight: normal;
-  color: #c51e1e;
+  color: #EE232E;
 }
 
 .btn {
