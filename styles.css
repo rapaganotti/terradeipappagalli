@@ -55,7 +55,7 @@ Se o logo ficou gigante, o problema está aqui
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 30px;
 }
 
 .logo {
