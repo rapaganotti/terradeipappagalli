@@ -52,6 +52,7 @@ Controlam: alinhamento do logo com o texto, tamanho do logo, tamanho do título 
 Se o logo ficou gigante, o problema está aqui
 ========================= */
 
+/*gap distancia entre o logo e a expressão Terra dei Pappagalli */
 .brand {
   display: flex;
   align-items: center;
@@ -128,6 +129,7 @@ Se o logo ficou gigante, o problema está aqui
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight:bold;
   color: #2C5B1E;
 
 }
