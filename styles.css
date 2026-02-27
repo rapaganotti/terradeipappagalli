@@ -17,7 +17,6 @@ html, body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  /* rolagem normal */
   overflow-x: hidden;
 }
 
@@ -80,9 +79,7 @@ img{ max-width: 100%; height: auto; display: block; }
 
 .nav-link:hover{ text-decoration: underline; }
 
-.nav .it{
-  color: var(--red);
-}
+.nav .it{ color: var(--red); }
 
 .btn{
   border: 1px solid var(--border);
@@ -196,12 +193,19 @@ img{ max-width: 100%; height: auto; display: block; }
 .meta{ margin: 10px 0 14px; }
 .status{ color: var(--muted); }
 
-/* ===== GRID (ORDEM CERTA, SEM MASONRY) ===== */
+/* ========================================================= */
+/* ======================  MASONRY  ========================= */
+/* ========================================================= */
+/*
+  IMPORTANTe: O “masonry perfeito” (sem buracos) vai ser aplicado pelo script.js
+  ajustando o posicionamento. Aqui o CSS já prepara o grid e os cards.
+*/
+
 .grid{
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-  align-items: stretch;
+  align-items: start;
 }
 
 @media (max-width: 1100px){
@@ -217,6 +221,12 @@ img{ max-width: 100%; height: auto; display: block; }
   .filters input, .filters select{ min-width: 0; width: 100%; }
 }
 
+/* O JS vai aplicar position:absolute nos cards dentro do grid.
+   Então o grid precisa ser “container” de posicionamento. */
+.grid.masonry{
+  position: relative;
+}
+
 /* ===== CARD ===== */
 .card{
   border: 1px solid var(--border);
@@ -226,9 +236,17 @@ img{ max-width: 100%; height: auto; display: block; }
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
+/* Quando JS ativar o masonry, os cards viram absolutos */
+.grid.masonry .card{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%; /* o JS vai sobrescrever com width em px */
+}
+
+/* fundo branco no quadradinho da imagem */
 .card .thumb{
   width: 100%;
   height: 170px;
@@ -251,7 +269,6 @@ img{ max-width: 100%; height: auto; display: block; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 1;
 }
 
 .badges{
@@ -281,13 +298,6 @@ img{ max-width: 100%; height: auto; display: block; }
   font-size: 14px;
   line-height: 1.25;
   font-weight: 800;
-
-  /* deixa mais uniforme (menos “buracos”) */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: calc(1.25em * 2);
 }
 
 .desc{
@@ -295,12 +305,6 @@ img{ max-width: 100%; height: auto; display: block; }
   color: var(--muted);
   font-size: 12px;
   line-height: 1.35;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 1.35em;
 }
 
 /* Italiano em itálico */
@@ -310,12 +314,6 @@ img{ max-width: 100%; height: auto; display: block; }
   font-size: 11px;
   line-height: 1.3;
   font-style: italic;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 1.3em;
 }
 
 .prices{
@@ -362,7 +360,7 @@ img{ max-width: 100%; height: auto; display: block; }
   object-fit: contain;
 }
 
-/* ===== POPUP PROMO (PRECISA EXISTIR, SENÃO VIRA “IMAGEM GIGANTE”) ===== */
+/* ===== POPUP PROMO ===== */
 .promo-overlay{
   position: fixed;
   inset: 0;
@@ -414,7 +412,6 @@ img{ max-width: 100%; height: auto; display: block; }
 @media print{
   .no-print{ display: none !important; }
 
-  /* remove header do site no PDF */
   .header{ display: none !important; }
 
   .container{
@@ -427,20 +424,27 @@ img{ max-width: 100%; height: auto; display: block; }
     padding: 6px 0;
   }
 
-  /* mostra cabeçalho do PDF */
   .print-header{
     display: block !important;
     break-after: avoid;
     page-break-after: avoid;
   }
 
-  /* 4 por linha no PDF */
+  /* No PDF vamos usar GRID normal (ordem perfeita e previsível) */
   .grid{
+    display: grid !important;
+    position: static !important;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
   }
 
-  /* evita foto numa página e texto na outra */
+  .grid.masonry .card{
+    position: static !important;
+    width: auto !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
   .card{
     break-inside: avoid;
     page-break-inside: avoid;
@@ -452,10 +456,9 @@ img{ max-width: 100%; height: auto; display: block; }
     page-break-inside: avoid;
   }
 
-  /* compacta */
   .card .thumb{ height: 120px; }
   .badge{ font-size: 10px; padding: 2px 7px; }
-  .title{ font-size: 12.5px; min-height: calc(1.25em * 2); }
+  .title{ font-size: 12.5px; }
   .desc{ font-size: 11px; }
   .it-name{ font-size: 10px; }
   .k{ font-size: 10px; }
@@ -463,7 +466,5 @@ img{ max-width: 100%; height: auto; display: block; }
 
   a{ color: #000; text-decoration: none; }
 
-  @page{
-    margin: 12mm;
-  }
+  @page{ margin: 12mm; }
 }
