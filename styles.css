@@ -1,416 +1,272 @@
-/* =========================================================
-   Terra dei Pappagalli | styles.css (LIMPO e COMPLETO)
-   - Corrige CSS duplicado (o seu arquivo estava repetido)
-   - Cabeçalho fixo (sticky) sempre visível
-   - “Buracos” do grid: layout tipo masonry (CSS columns) SÓ nos produtos
-   - Categoria (badge) quebra em 2+ linhas (não corta)
-   - Impressão: 4 produtos por linha + cabeçalho de impressão só no PRINT
-========================================================= */
-
-:root{
-  --bg: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --green: #1F5E2E;
-  --red: #C62828;
-  --card: #ffffff;
-  --shadow: 0 8px 30px rgba(0,0,0,.08);
-}
-
-*{ box-sizing: border-box; }
-
-html, body{
+/* RESET */
+* {
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden; /* evita “barra” lateral quando algo estoura */
+  box-sizing: border-box;
 }
 
-.muted{ color: var(--muted); }
+html, body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f6f7;
+  color: #1b1b1b;
+  scroll-behavior: smooth;
+}
 
-/* =========================
-   HEADER (fixo)
-========================= */
-.header{
-  position: sticky;     /* fica fixo no topo */
+/* ================= HEADER FIXO ================= */
+
+.header {
+  position: fixed;
   top: 0;
-  z-index: 1000;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 18px;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  z-index: 9999;
+  border-bottom: 1px solid #e2e2e2;
+  padding: 16px 40px;
 }
 
-.brand{
+.container {
+  padding: 140px 40px 60px 40px; /* espaço para header fixo */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  width: 90px;
+}
+
+.brand-text h1 {
+  font-size: 24px;
+  color: #163c2f;
+}
+
+.descriptor {
+  font-size: 14px;
+  color: #6b6b6b;
+}
+
+/* NAV */
+
+.nav {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #1b1b1b;
+  font-weight: bold;
+}
+
+.nav-link .it {
+  display: block;
+  font-weight: normal;
+  color: #c51e1e;
+}
+
+.btn {
+  margin-left: auto;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn .it {
+  color: #c51e1e;
+}
+
+/* ================= SECTIONS ================= */
+
+.section {
+  margin-bottom: 60px;
+}
+
+.title-row {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
-.logo{
-  width: 150px;
-  height: auto;
-  object-fit: contain;
-  display: block;
+.section-icon {
+  width: 34px;
 }
 
-.brand-text h1{
-  margin: 0;
-  font-size: 20px;
+.section h2 {
+  font-size: 26px;
+  color: #163c2f;
 }
 
-.descriptor{
-  margin: 2px 0 0;
-  font-weight: 550;
-  color: var(--muted);
-}
-
-/* =========================
-   MENU
-========================= */
-.nav{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 28px;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.nav-link{
-  text-decoration: none;
-  color: var(--green);
-  font-weight: 650;
-  display: inline-flex;
-  flex-direction: column;
-}
-
-.nav .it{
-  color: var(--red);
-}
-
-.btn{
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 8px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  font-weight: 650;
-}
-
-.btn:hover{ transform: translateY(-1px); }
-
-/* =========================
-   MAIN
-========================= */
-.container{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 22px 18px 48px;
-}
-
-.section{
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.section h2{
-  margin: 0;
-  font-size: 22px;
-}
-
-.it-sub{
-  margin-top: 4px;
-  color: var(--muted);
+.it-sub {
+  color: #c51e1e;
   font-size: 14px;
 }
 
-.title-row{
+/* ================= ABOUT ================= */
+
+.about p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.about h3 {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: #163c2f;
+}
+
+/* QUADRADO VERDE ITALIANO */
+
+.quadrado {
+  background: #e9fdeb;
+  border: 1px solid #cfe9d2;
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+/* ================= PRODUTOS ================= */
+
+.filters {
   display: flex;
-  gap: 12px;
-  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.input, .select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e3e3e3;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #f8f8f8;
+  padding: 20px;
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.badge {
+  background: #e9fdeb;
+  border: 1px solid #cfe9d2;
+  color: #163c2f;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 12px;
+  display: inline-block;
   margin-bottom: 10px;
 }
 
-.section-icon{
-  height: 72px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
+/* ================= CONTATO ================= */
 
-/* =========================================================
-   PRODUTOS: MASONRY (SEM BURACOS) APENAS NA GRID
-   - Importante: isso NÃO pode vazar para .section / .container
-========================================================= */
-.grid{
-  /* Masonry via columns */
-  column-count: 4;
-  column-gap: 14px;
-}
-
-/* responsivo */
-@media (max-width: 1100px){
-  .grid{ column-count: 3; }
-}
-@media (max-width: 860px){
-  .grid{ column-count: 2; }
-}
-@media (max-width: 640px){
-  .grid{ column-count: 1; }
-}
-
-/* CARD precisa ser “inline-block” dentro de columns */
-.card{
-  display: inline-block;
-  width: 100%;
-  margin: 0 0 14px;            /* “gap” vertical do masonry */
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-
-  /* não quebrar no meio dentro das colunas */
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
-
-.card .thumb{
-  width: 100%;
-  height: 170px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.card .thumb img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 10px;
-  display: block;
-}
-
-.card .body{
-  padding: 12px 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* badges */
-.badges{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.badge{
-  font-size: 12px;
-  color: #0f172a;
-  background: #eef2ff;
-  border: 1px solid #e0e7ff;
-  padding: 3px 8px;
-  border-radius: 999px;
-
-  /* ESSENCIAL: não cortar texto */
-  max-width: 100%;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  line-height: 1.2;
-}
-
-.badge.cat{
-  background: #ecfdf5;
-  border-color: #d1fae5;
-  color: var(--green);
-}
-
-/* textos do card */
-.title{
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.25;
-  font-weight: 800;
-}
-
-.desc{
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
-.it-name{
-  margin: 0;
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.2;
-}
-
-.prices{
+.contact {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 10px;
-  margin-top: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
 }
 
-.k{ font-size: 12px; color: var(--muted); }
-.v{ font-weight: 800; }
-
-/* =========================
-   CONTATO
-========================= */
-.contact{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 10px;
+.contact-card h3 {
+  color: #163c2f;
+  margin-bottom: 10px;
 }
 
-@media (max-width: 900px){
-  .contact{ grid-template-columns: 1fr; }
+.contact-card p {
+  font-size: 16px;
 }
 
-.contact a{
-  color: var(--green);
+.contact-link {
+  color: #163c2f;
   text-decoration: none;
 }
 
-.contact a:hover{ text-decoration: underline; }
-
-/* =========================
-   FOOTER
-========================= */
-.footer{
-  padding: 18px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.contact-link .it {
+  color: #c51e1e;
 }
 
-/* você disse que quer maior depois; deixei “ok” sem exagero */
-.logo-footer{
-  height: 36px;
-  width: auto;
-  object-fit: contain;
-  display: block;
+/* ================= FOOTER ================= */
+
+.footer {
+  margin-top: 60px;
+  padding: 30px;
+  text-align: center;
+  background: #ffffff;
+  border-top: 1px solid #e3e3e3;
 }
 
-/* =========================================================
-   CABEÇALHO DE IMPRESSÃO (não aparece na tela)
-========================================================= */
-.print-header{
-  display: none;                 /* NUNCA aparece no site */
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+.logo-footer {
+  width: 180px;
 }
 
-.print-banner{
-  width: 100%;
-  height: auto;
-  display: block;
-}
+/* ================= POPUP ================= */
 
-/* =========================================================
-   IMPRESSÃO (PDF)
-   - 4 produtos por linha
-   - sem buracos “masonry” no print (usa GRID de verdade)
-========================================================= */
-@media print{
-  .no-print{ display: none !important; }
-  .header{ display: none !important; } /* header do site não entra */
-
-  .container{
-    max-width: none;
-    padding: 0 10mm;
-  }
-
-  .section{
-    border-bottom: none;
-    padding: 8px 0;
-  }
-
-  /* Mostra o cabeçalho do PDF SOMENTE no print */
-  .print-header{
-    display: block !important;
-    break-after: avoid;
-    page-break-after: avoid;
-  }
-
-  /* no print, grid real (4 por linha) */
-  .grid{
-    column-count: unset !important;
-    column-gap: 0 !important;
-
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 10px !important;
-  }
-
-  .card{
-    display: flex !important;  /* volta comportamento normal */
-    margin: 0 !important;
-    box-shadow: none !important;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-
-  .card .thumb{ height: 120px !important; }
-
-  .title{ font-size: 13px !important; }
-  .desc{ font-size: 12px !important; }
-  .it-name{ font-size: 11px !important; }
-  .badge{ font-size: 11px !important; }
-
-  a{ color: #000 !important; text-decoration: none !important; }
-
-  @page{
-    margin: 12mm;
-  }
-}
-
-/* =========================================================
-   POPUP PROMO (sem borda extra)
-========================================================= */
-.promo-overlay{
+.popup {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.65);
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 16px;
-  z-index: 9999;
+  z-index: 10000;
 }
 
-.promo-overlay.is-open{ display: flex; }
+.popup.active {
+  display: flex;
+}
 
-.promo-box{
-  max-width: min(920px, 96vw);
-  max-height: 90vh;
+.popup-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.popup-card {
+  position: relative;
+  z-index: 10;
+}
+
+.popup-img {
+  max-width: 700px;
+  border-radius: 12px;
+}
+
+.popup-close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ffffff;
+  border: none;
+  font-size: 22px;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
-}
-
-.promo-img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 14px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.45);
-  border: 0; /* garante que não aparece borda */
-}
-
-@media (max-width: 520px){
-  .promo-img{ border-radius: 12px; }
 }
