@@ -1,470 +1,302 @@
 :root{
-  --bg: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-  --green: #1F5E2E;
-  --red: #C62828;
-  --card: #ffffff;
-  --shadow: 0 8px 30px rgba(0,0,0,.08);
+  --green:#1f6b3b;
+  --green-soft:#d9efe1;
+  --red:#c62828;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --card:#ffffff;
+  --bg:#f4f6f8;
+  --radius:14px;
 }
 
-*{ box-sizing: border-box; }
-
-html, body{
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
+*{
+  box-sizing:border-box;
 }
 
-img{ max-width: 100%; height: auto; display: block; }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+  background:var(--bg);
+  color:var(--text);
+  padding-top:110px; /* espaço do header fixo */
+}
 
-.muted{ color: var(--muted); }
+/* ================= HEADER FIXO ================= */
 
-/* ===== HEADER ===== */
 .header{
-  position: sticky;
-  top: 0;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 18px;
-  z-index: 10;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#ffffff;
+  border-bottom:1px solid #e5e7eb;
+  z-index:1000;
+  padding:14px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .brand{
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display:flex;
+  align-items:center;
+  gap:16px;
 }
 
 .logo{
-  width: 150px;
-  height: auto;
-  object-fit: contain;
+  height:60px;
 }
 
 .brand-text h1{
-  margin: 0;
-  font-size: 20px;
-  letter-spacing: .2px;
+  margin:0;
+  font-size:22px;
 }
 
 .descriptor{
-  margin: 2px 0 0;
-  font-weight: 550;
-  color: var(--muted);
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
 }
 
-/* ===== MENU ===== */
 .nav{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 28px;
-  align-items: center;
-  margin-top: 10px;
+  display:flex;
+  align-items:center;
+  gap:22px;
 }
 
 .nav-link{
-  text-decoration: none;
-  color: var(--green);
-  font-weight: 650;
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 1.1;
+  text-decoration:none;
+  color:var(--green);
+  font-weight:600;
+  display:flex;
+  flex-direction:column;
+  font-size:14px;
 }
 
-.nav-link:hover{ text-decoration: underline; }
-
-.nav .it{ color: var(--red); }
+.nav-link .it{
+  color:var(--red);
+  font-weight:500;
+}
 
 .btn{
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 8px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  font-weight: 650;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.1;
+  background:#fff;
+  border:1px solid #ddd;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
 }
 
-.btn:hover{ transform: translateY(-1px); }
+/* ================= CONTAINER ================= */
 
-@media (max-width: 640px){
-  .btn{
-    width: 100%;
-    align-items: center;
-    text-align: center;
-  }
-}
-
-/* ===== MAIN ===== */
 .container{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 22px 18px 48px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px;
 }
 
 .section{
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.section h2{
-  margin: 0;
-  font-size: 22px;
-}
-
-.section h3{
-  margin: 18px 0 8px;
-  font-size: 18px;
-}
-
-.it-sub{
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 14px;
+  margin-bottom:60px;
 }
 
 .title-row{
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 10px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:20px;
 }
 
 .section-icon{
-  height: 72px;
-  width: auto;
-  object-fit: contain;
+  height:40px;
 }
 
-/* ===== QUADRADO TRADUÇÃO ===== */
+.it-sub{
+  color:var(--red);
+}
+
+/* ================= QUADRADO ITALIANO ================= */
+
 .quadrado{
-  background: #e9fdeb;
-  border: 1px solid #cfe9d2;
-  border-radius: 14px;
-  padding: 14px 16px;
-  width: 100%;
-  max-width: 900px;
-  margin: 16px 0 0;
+  background:var(--green-soft);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-top:20px;
 }
 
-.quadrado p{
-  margin: 0 0 10px;
-  line-height: 1.4;
-  font-size: 13px;
-}
-
-@media (max-width: 640px){
-  .quadrado{ padding: 12px; border-radius: 12px; }
-  .quadrado p{ font-size: 14px; }
-}
-
-/* ===== CATALOGO / FILTROS ===== */
-.section-head{
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.filters{
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.filters input, .filters select{
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
-  min-width: 220px;
-}
-
-.meta{ margin: 10px 0 14px; }
-.status{ color: var(--muted); }
-
-/* ========================================================= */
-/* ======================  MASONRY  ========================= */
-/* ========================================================= */
-/*
-  IMPORTANTe: O “masonry perfeito” (sem buracos) vai ser aplicado pelo script.js
-  ajustando o posicionamento. Aqui o CSS já prepara o grid e os cards.
-*/
+/* ================= GRID ================= */
 
 .grid{
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  align-items: start;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:18px;
+  position:relative;
 }
 
-@media (max-width: 1100px){
-  .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 860px){
-  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 640px){
-  .grid{ grid-template-columns: 1fr; }
-  .filters input, .filters select{ min-width: 0; width: 100%; }
-}
-
-/* O JS vai aplicar position:absolute nos cards dentro do grid.
-   Então o grid precisa ser “container” de posicionamento. */
+/* usado pelo JS masonry */
 .grid.masonry{
-  position: relative;
+  display:block;
+  position:relative;
 }
 
-/* ===== CARD ===== */
 .card{
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--card);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  overflow:hidden;
+  position:relative;
 }
 
-/* Quando JS ativar o masonry, os cards viram absolutos */
-.grid.masonry .card{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%; /* o JS vai sobrescrever com width em px */
+.thumb{
+  padding:20px;
+  text-align:center;
+  min-height:200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* fundo branco no quadradinho da imagem */
-.card .thumb{
-  width: 100%;
-  height: 170px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--border);
+.thumb img{
+  max-width:100%;
+  max-height:180px;
 }
 
-.card .thumb img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 10px;
-}
-
-.card .body{
-  padding: 12px 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.badges{
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.badge{
-  font-size: 11px;
-  color: #0f172a;
-  background: #eef2ff;
-  border: 1px solid #e0e7ff;
-  padding: 3px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.badge.cat{
-  background: #ecfdf5;
-  border-color: #d1fae5;
-  color: var(--green);
+.body{
+  padding:18px;
 }
 
 .title{
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.25;
-  font-weight: 800;
+  font-size:18px;
+  margin:10px 0;
 }
 
-.desc{
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
+/* ================= BADGES ================= */
+
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
 }
 
-/* Italiano em itálico */
-.it-name{
-  margin: -4px 0 0;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.3;
-  font-style: italic;
+.badge{
+  background:#eef2ff;
+  color:#1e3a8a;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  max-width:100%;
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  line-height:1.2;
 }
+
+.badge.cat{
+  background:#e0f2e9;
+  color:var(--green);
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+/* ================= PREÇOS ================= */
 
 .prices{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 10px;
-  margin-top: 2px;
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
 }
 
-.k{ font-size: 11px; color: var(--muted); }
-.v{ font-weight: 800; font-size: 13px; }
+.k{
+  font-size:12px;
+  color:var(--muted);
+}
 
-/* ===== CONTATO ===== */
+.v{
+  font-weight:700;
+}
+
+/* ================= CONTATO ================= */
+
 .contact{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 10px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:30px;
+}
+
+.contact h3{
+  margin-bottom:10px;
 }
 
 .contact a{
-  color: var(--green);
-  text-decoration: none;
+  text-decoration:none;
+  color:var(--green);
+  font-weight:600;
 }
 
-.contact a:hover{ text-decoration: underline; }
-
-@media (max-width: 900px){
-  .contact{ grid-template-columns: 1fr; }
+.contact .it{
+  color:var(--red);
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
+
 .footer{
-  padding: 18px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: left;
-  align-items: left;
+  text-align:center;
+  padding:30px 0;
+  border-top:1px solid #e5e7eb;
+  background:#fff;
 }
 
 .logo-footer{
-  height: 90px;
-  width: auto;
-  object-fit: contain;
+  height:60px;
 }
 
-/* ===== POPUP PROMO ===== */
+/* ================= POPUP ================= */
+
 .promo-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.65);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 9999;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
 }
 
-.promo-overlay.is-open{ display: flex; }
+.promo-overlay.is-open{
+  display:flex;
+}
 
 .promo-box{
-  max-width: min(920px, 96vw);
-  max-height: 90vh;
-  cursor: pointer;
+  background:#fff;
+  padding:10px;
+  border-radius:12px;
 }
 
 .promo-img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 14px;
-  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+  max-width:90vw;
+  max-height:80vh;
 }
 
-@media (max-width: 520px){
-  .promo-img{ border-radius: 12px; }
-}
-
-/* ========================================================= */
-/* ====================  IMPRESSÃO  ======================== */
-/* ========================================================= */
-
-.print-header{
-  display: none;
-  margin: 0 0 10px;
-  padding: 0 0 8px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.print-banner{
-  width: 100%;
-  height: auto;
-  display: block;
-}
+/* ================= PRINT ================= */
 
 @media print{
-  .no-print{ display: none !important; }
-
-  .header{ display: none !important; }
-
-  .container{
-    max-width: none;
-    padding: 0 10mm;
+  .no-print,
+  .header,
+  .footer{
+    display:none !important;
   }
 
-  .section{
-    border: none;
-    padding: 6px 0;
+  body{
+    padding-top:0;
   }
 
-  .print-header{
-    display: block !important;
-    break-after: avoid;
-    page-break-after: avoid;
-  }
-
-  /* No PDF vamos usar GRID normal (ordem perfeita e previsível) */
   .grid{
-    display: grid !important;
-    position: static !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .grid.masonry .card{
-    position: static !important;
-    width: auto !important;
-    left: auto !important;
-    top: auto !important;
+    display:grid !important;
+    position:static !important;
   }
 
   .card{
-    break-inside: avoid;
-    page-break-inside: avoid;
-    box-shadow: none;
+    break-inside:avoid;
   }
-  .card .thumb,
-  .card .body{
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  .card .thumb{ height: 120px; }
-  .badge{ font-size: 10px; padding: 2px 7px; }
-  .title{ font-size: 12.5px; }
-  .desc{ font-size: 11px; }
-  .it-name{ font-size: 10px; }
-  .k{ font-size: 10px; }
-  .v{ font-size: 12px; }
-
-  a{ color: #000; text-decoration: none; }
-
-  @page{ margin: 12mm; }
 }
