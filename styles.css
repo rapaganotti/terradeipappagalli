@@ -434,11 +434,12 @@ h2{
   margin-top: 40px;
   padding: 30px 0;
   text-align: center;
+  border-top: 1px solid #e2e2e2;
 }
 
 .logo_prodotti{
-  width: 220px;   /* ajuste aqui o tamanho */
-  max-width: 100%;
+  width: 18%;
+  max-width: 260px;
   height: auto;
 }
 
