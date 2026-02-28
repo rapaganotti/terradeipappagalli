@@ -58,7 +58,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 20px); }
 }
 
 .logo{
-  width: 130px;
+  width: 150px;
   height: auto;
 }
 
@@ -271,7 +271,7 @@ h2{
 }
 
 .product-body{
-  padding: 14px 14px 16px 14px;
+  padding: 14px 18px 16px 14px;
 }
 
 .badges{
