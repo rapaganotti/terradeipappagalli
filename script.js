@@ -145,7 +145,7 @@ async function loadProducts() {
   // imagem,codigo,categoria,nome,descricao,qtd_caixa,valor_un,Italiano
   allProducts = rows.map(r => {
     let imagem = pick(r, ["imagem"]);
-      //const codigo = pick(r, ["codigo"]);
+    const codigo = pick(r, ["codigo"]);
     const categoria = pick(r, ["categoria"]);
     const nome = pick(r, ["nome"]);
     const descricao = pick(r, ["descricao"]);
@@ -157,9 +157,8 @@ async function loadProducts() {
     if (imagem && !imagem.includes("/") && !imagem.startsWith("http")) {
       imagem = `imagem/${imagem}`;
     }
-  
-//  codigo,
-    return { imagem,  categoria, nome, descricao, italiano, qtdCaixa, valorUn };
+
+    return { imagem, codigo, categoria, nome, descricao, italiano, qtdCaixa, valorUn };
   });
 
   filteredProducts = [...allProducts];
@@ -202,10 +201,8 @@ function applyFilters() {
     if (cat && String(p.categoria ?? "").trim() !== cat) return false;
     if (!q) return true;
 
-
-  // p.codigo,
     const hay = normalize(
-      [p.nome, p.descricao, p.italiano,  p.categoria]
+      [p.nome, p.descricao, p.italiano, p.codigo, p.categoria]
         .filter(Boolean)
         .join(" ")
     );
@@ -236,7 +233,7 @@ function renderProducts(items) {
 
     const nome = p.nome || "";
     const categoria = p.categoria || "";
-   //   const codigo = p.codigo || "";
+    const codigo = p.codigo || "";
     const descricao = p.descricao || "";
     const italiano = p.italiano || "";
     const qtd = p.qtdCaixa || "";
@@ -250,10 +247,8 @@ function renderProducts(items) {
       </div>
 
       <div class="product-body">
+  //          ${codigo ? `<span class="badge">Cód: ${esc(codigo)}</span>` : ""}
         <div class="badges">
-
-            //${codigo ? `<span class="badge">Cód: ${esc(codigo)}</span>` : ""}
-
           ${categoria ? `<span class="badge category">${esc(categoria)}</span>` : ""}
         </div>
 
