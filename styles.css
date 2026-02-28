@@ -430,6 +430,18 @@ h2{
 .no-print{}
 .print-only{ display:none; }
 
+.footer{
+  margin-top: 40px;
+  padding: 30px 0;
+  text-align: center;
+}
+
+.logo_prodotti{
+  width: 220px;   /* ajuste aqui o tamanho */
+  max-width: 100%;
+  height: auto;
+}
+
 
 /* =========================
    POPUP PROMO
@@ -472,6 +484,7 @@ h2{
   font-size:26px;
   line-height:1;
 }
+
 
 /* =========================
    CABEÇALHO SÓ PARA IMPRESSÃO
