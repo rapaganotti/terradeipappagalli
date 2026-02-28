@@ -570,3 +570,127 @@ h2{
     object-fit: contain !important;
   }
 }
+
+/* =========================
+   PRINT (A4) - só catálogo
+   Cabeçalho (imagem) + Produtos (grid) + Rodapé (logos)
+========================= */
+@media print{
+
+  /* A4 e margens */
+  @page{
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  /* some tudo por padrão */
+  body *{
+    visibility: hidden !important;
+  }
+
+  /* some header fixo da tela (pra não “empurrar” conteúdo) */
+  .header{
+    display: none !important;
+  }
+
+  /* remove fundo cinza e paddings que atrapalham no PDF */
+  html, body{
+    background: #fff !important;
+  }
+  .container{
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  /* =========================
+     MOSTRAR: PRINT HEADER (mas usando PNG)
+  ========================= */
+  #printHeader{
+    visibility: visible !important;
+    display: block !important;
+
+    /* usa a imagem do cabeçalho de impressão */
+    background: url("imagem/cabecalho_impressao.PNG") no-repeat top left !important;
+    background-size: contain !important;
+
+    /* altura do cabeçalho (ajuste fino se precisar) */
+    height: 38mm !important;
+
+    /* espaçamento depois do cabeçalho */
+    margin: 0 0 6mm 0 !important;
+    padding: 0 !important;
+  }
+
+  /* esconde o conteúdo interno do printHeader (vai ficar só o PNG no fundo) */
+  #printHeader *{
+    display: none !important;
+  }
+
+  /* =========================
+     MOSTRAR: PRODUTOS
+  ========================= */
+  #produtos, #produtos *{
+    visibility: visible !important;
+  }
+
+  /* não mostrar barra de busca/combos na impressão */
+  #produtos .controls,
+  #produtos .controls *{
+    display: none !important;
+  }
+
+  /* coloca produtos logo abaixo do cabeçalho */
+  #produtos{
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 5 por linha no A4 */
+  #grid{
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 6mm !important;
+    align-items: start !important;
+  }
+
+  /* evita cortar card no meio */
+  .product-card{
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* =========================
+     MOSTRAR: RODAPÉ (mesmo da página)
+     Seu footer tem "no-print", então aqui a gente “reabilita” só ele
+  ========================= */
+  footer.footer,
+  footer.footer *{
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  /* empurra o rodapé pro final (sem fixar) */
+  footer.footer{
+    margin-top: 10mm !important;
+  }
+
+  /* se existir classe no-print no footer, não deixa ela esconder */
+  footer.footer.no-print,
+  footer.footer.no-print *{
+    display: block !important;
+  }
+
+  /* opcional: diminuir um pouco a imagem do rodapé no PDF */
+  .logo_prodotti{
+    max-width: 160mm !important;
+    height: auto !important;
+  }
+
+  /* garante que “Quem somos” e “Contato” não apareçam mesmo */
+  #quem-somos, #quem-somos *,
+  #contato, #contato *{
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
