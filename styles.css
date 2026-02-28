@@ -431,16 +431,28 @@ h2{
 .print-only{ display:none; }
 
 .footer{
-  margin-top: 40px;
-  padding: 30px 0;
-  text-align: center;
-  border-top: 1px solid #e2e2e2;
+  margin-top: 50px;
+  border-top: 1px solid var(--border);
 }
 
+.footer-inner{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 34px; /* mesma margem lateral do header-inner */
+}
+
+/* Tamanho do logo do rodapé */
 .logo_prodotti{
-  width: 18%;
-  max-width: 260px;
+  width: 220px;      /* ajuste aqui */
+  max-width: 100%;
   height: auto;
+  display: block;
+}
+
+/* Responsivo: acompanha o padding do header no mobile */
+@media (max-width: 900px){
+  .footer-inner{ padding: 24px 18px; }
+  .logo_prodotti{ width: 180px; }
 }
 
 
