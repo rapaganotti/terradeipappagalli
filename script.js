@@ -1,271 +1,310 @@
-// ======= CONFIG =======
-const CSV_FILE = "products.csv";
-const IMAGE_FOLDER = "imagem/";
+// Terra dei Pappagalli | Prodotti Brasiliani
+// Script principal: carrega CSV, renderiza cards, filtro e impressão.
 
-// Troque pelo WhatsApp do seu tio (formato internacional, sem +, sem espaços)
-const WHATSAPP_NUMBER = "393932245332";
+(function () {
+  "use strict";
 
-// ======= ELEMENTOS =======
-const grid = document.getElementById("grid");
-const statusEl = document.getElementById("status");
-const searchEl = document.getElementById("search");
-const categoryEl = document.getElementById("category");
-const btnPrint = document.getElementById("btnPrint");
-const whatsLink = document.getElementById("whatsLink");
+  // ====== ELEMENTOS (IDs do HTML atual) ======
+  const el = {
+    header: document.querySelector(".header"),
+    btnPrint: document.getElementById("btnPrint"),
+    search: document.getElementById("search"),
+    category: document.getElementById("category"),
+    grid: document.getElementById("grid"),
+    status: document.getElementById("status"),
+    promoOverlay: document.getElementById("promoOverlay"),
+    promoImg: document.getElementById("promoImg"),
+    promoClose: document.getElementById("promoClose"),
+  };
 
-let allProducts = [];
-
-// ======= HELPERS =======
-function escapeHtml(str) {
-  return String(str ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function parseCSV(text) {
-  // CSV simples com separador ; ou ,
-  const lines = text.trim().split(/\r?\n/);
-  const sep = lines[0].includes(";") ? ";" : ",";
-  const headers = lines[0].split(sep).map((h) => h.trim());
-
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line.trim()) continue;
-
-    // Split simples (assumindo que não há ; dentro do texto)
-    const cols = line.split(sep).map((c) => c.trim());
-    const obj = {};
-    headers.forEach((h, idx) => (obj[h] = cols[idx] ?? ""));
-    rows.push(obj);
-  }
-  return rows;
-}
-
-function money(val) {
-  const n = Number(String(val).replace(",", "."));
-  if (!isFinite(n)) return escapeHtml(val);
-  return n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
-}
-
-function buildCategoryOptions(products) {
-  if (!categoryEl) return;
-  categoryEl.innerHTML = `<option value="">Todas as categorias</option>`;
-
-  const cats = Array.from(
-    new Set(products.map((p) => (p.categoria || "").trim()).filter(Boolean))
-  ).sort();
-
-  for (const c of cats) {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.textContent = c;
-    categoryEl.appendChild(opt);
-  }
-}
-
-function render(products) {
-  if (!grid) return;
-
-  grid.innerHTML = "";
-  if (!products.length) {
-    grid.innerHTML = `<div class="status">Nenhum produto encontrado.</div>`;
+  // Se faltar algo essencial, não quebra a página
+  if (!el.grid || !el.category || !el.search) {
+    console.warn("Elementos de produtos não encontrados (search/category/grid).");
     return;
   }
 
-  const frag = document.createDocumentFragment();
+  // ====== CONFIG ======
+  // Ajuste aqui se você trocar o caminho/nome do CSV no repositório
+  const PRODUCTS_CSV_URL = "products.csv";
+  const PROMO_IMAGE_URL = "imagem/promo_feijoada.png"; // se não existir, o popup some
 
-  for (const p of products) {
-    const imgFile = (p.imagem || "").trim();
-    const imgSrc = imgFile ? IMAGE_FOLDER + imgFile : "";
+  // ====== STATE ======
+  let allProducts = [];
+  let visibleProducts = [];
 
-    const card = document.createElement("article");
-    card.className = "card";
+  // ====== UTILS ======
+  function setHeaderOffset() {
+    if (!el.header) return;
+    // Atualiza a variável CSS --header-h para empurrar o conteúdo
+    const h = Math.ceil(el.header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty("--header-h", `${h}px`);
+  }
 
-    card.innerHTML = `
-      <div class="thumb">
-        ${
-          imgSrc
-            ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(
-                p.nome
-              )}" onerror="this.style.display='none'; this.parentElement.textContent='Sem imagem';">`
-            : `<span class="k">Sem imagem</span>`
-        }
-      </div>
+  function normalize(str) {
+    return String(str || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
 
-      <div class="body">
-        <div class="badges">
-          ${p.codigo ? `<span class="badge">Cód: ${escapeHtml(p.codigo)}</span>` : ""}
-          ${p.categoria ? `<span class="badge cat">${escapeHtml(p.categoria)}</span>` : ""}
+  function parseCSV(text) {
+    // Parser simples (suporta aspas e vírgulas dentro de aspas)
+    const rows = [];
+    let row = [];
+    let cur = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
+
+      if (ch === '"' && inQuotes && next === '"') {
+        cur += '"';
+        i++;
+        continue;
+      }
+      if (ch === '"') {
+        inQuotes = !inQuotes;
+        continue;
+      }
+      if (ch === "," && !inQuotes) {
+        row.push(cur);
+        cur = "";
+        continue;
+      }
+      if ((ch === "\n" || ch === "\r") && !inQuotes) {
+        if (ch === "\r" && next === "\n") i++;
+        row.push(cur);
+        rows.push(row);
+        row = [];
+        cur = "";
+        continue;
+      }
+      cur += ch;
+    }
+    if (cur.length || row.length) {
+      row.push(cur);
+      rows.push(row);
+    }
+
+    if (rows.length === 0) return [];
+    const headers = rows[0].map(h => normalize(h).trim());
+    const data = [];
+
+    for (let r = 1; r < rows.length; r++) {
+      const obj = {};
+      rows[r].forEach((val, c) => {
+        obj[headers[c] || `col_${c}`] = String(val || "").trim();
+      });
+      // Ignora linhas vazias
+      if (Object.values(obj).some(v => v !== "")) data.push(obj);
+    }
+    return data;
+  }
+
+  function pick(obj, keys, fallback = "") {
+    for (const k of keys) {
+      if (obj[k] != null && String(obj[k]).trim() !== "") return String(obj[k]).trim();
+    }
+    return fallback;
+  }
+
+  function moneyEUR(v) {
+    const n = Number(String(v).replace(",", "."));
+    if (!Number.isFinite(n)) return "";
+    return n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
+  }
+
+  // ====== RENDER ======
+  function renderCategories(products) {
+    const current = el.category.value || "";
+    const cats = Array.from(
+      new Set(products.map(p => p.categoria).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+    el.category.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = "Todas as categorias";
+    el.category.appendChild(optAll);
+
+    for (const c of cats) {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      el.category.appendChild(opt);
+    }
+
+    // tenta manter seleção anterior
+    if ([...el.category.options].some(o => o.value === current)) {
+      el.category.value = current;
+    }
+  }
+
+  function cardHTML(p) {
+    const rawImg = p.imagem || "";
+    const codigo = p.codigo || "";
+    const categoria = p.categoria || "";
+    const nome = p.nome || "";
+    const marca = p.marca || "";
+    const it = p.it || "";
+    const qtd = p.qtd || "";
+    const preco = p.preco || "";
+
+    const priceStr = moneyEUR(preco);
+    const qtdStr = qtd ? String(qtd) : "";
+
+    // Normaliza caminho de imagem:
+    // - se vier vazio: não mostra
+    // - se vier "http..." ou começar com "/" : usa como está
+    // - se vier só "arquivo.png": assume pasta "imagem/"
+    let img = rawImg.trim();
+    if (img && !/^https?:\/\//i.test(img) && !img.startsWith("/")) {
+      if (!img.includes("/")) img = `imagem/${img}`;
+    }
+
+    const imgTag = img
+      ? `<img src="${img}" alt="${nome}" loading="lazy" onerror="this.style.display='none'">`
+      : "";
+
+    return `
+      <article class="product-card">
+        <div class="product-image">${imgTag}</div>
+        <div class="product-body">
+          <div class="badges">
+            ${codigo ? `<span class="badge">Cód: ${codigo}</span>` : ""}
+            ${categoria ? `<span class="badge category">${categoria}</span>` : ""}
+          </div>
+
+          <div class="product-title">${nome}</div>
+          ${marca ? `<div class="product-desc">${marca}</div>` : ""}
+          ${it ? `<div class="product-it">${it}</div>` : ""}
+
+          <div class="prices">
+            <div>
+              <div class="k">Qtd/caixa</div>
+              <div class="v">${qtdStr}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="k">Valor unidade</div>
+              <div class="v">${priceStr}</div>
+            </div>
+          </div>
         </div>
-
-        <h3 class="title">${escapeHtml(p.nome || p.descricao || "Produto")}</h3>
-
-        ${p.descricao ? `<p class="desc">${escapeHtml(p.descricao)}</p>` : ""}
-
-        ${
-          p.italiano
-            ? `<p class="it-name"><i>${escapeHtml(p.italiano)}</i></p>`
-            : ""
-        }
-
-        <div class="prices">
-          ${
-            p.qtd_caixa
-              ? `<div><div class="k">Qtd/caixa</div><div class="v">${escapeHtml(
-                  p.qtd_caixa
-                )}</div></div>`
-              : ""
-          }
-          ${
-            p.valor_un
-              ? `<div><div class="k">Valor unidade</div><div class="v">${money(
-                  p.valor_un
-                )}</div></div>`
-              : ""
-          }
-          ${
-            p.valor_total
-              ? `<div><div class="k">Valor total</div><div class="v">${money(
-                  p.valor_total
-                )}</div></div>`
-              : ""
-          }
-        </div>
-      </div>
+      </article>
     `;
-
-    frag.appendChild(card);
   }
 
-  grid.appendChild(frag);
-}
+  function renderGrid(products) {
+    el.grid.innerHTML = products.map(cardHTML).join("");
+    if (el.status) el.status.textContent = `${products.length} produto(s)`;
+  }
 
-function applyFilters() {
-  const q = (searchEl?.value || "").toLowerCase().trim();
-  const cat = (categoryEl?.value || "").trim();
+  // ====== FILTER ======
+  function applyFilters() {
+    const q = normalize(el.search.value);
+    const cat = el.category.value;
 
-  const filtered = allProducts.filter((p) => {
-    const inCat = !cat || (p.categoria || "").trim() === cat;
+    visibleProducts = allProducts.filter(p => {
+      const okCat = !cat || p.categoria === cat;
+      if (!okCat) return false;
+      if (!q) return true;
 
-    const hay = `${p.nome ?? ""} ${p.descricao ?? ""} ${p.italiano ?? ""} ${p.codigo ?? ""}`.toLowerCase();
-    const inSearch = !q || hay.includes(q);
+      const hay = normalize(
+        [p.nome, p.marca, p.it, p.categoria, p.codigo].filter(Boolean).join(" ")
+      );
+      return hay.includes(q);
+    });
 
-    return inCat && inSearch;
-  });
+    renderGrid(visibleProducts);
+  }
 
-  if (statusEl) statusEl.textContent = `${filtered.length} produto(s)`;
-  render(filtered);
-}
-
-// ======= LOAD CSV =======
-async function load() {
-  try {
-    const res = await fetch(CSV_FILE, { cache: "no-store" });
-    if (!res.ok) throw new Error("Não consegui ler products.csv");
-
-    const buf = await res.arrayBuffer();
-    let text;
+  // ====== LOAD ======
+  async function loadProducts() {
     try {
-      text = new TextDecoder("utf-8", { fatal: true }).decode(buf);
-    } catch {
-      text = new TextDecoder("windows-1252").decode(buf);
+      // cache bust para evitar "ficar piscando" em deploy
+      const url = `${PRODUCTS_CSV_URL}?v=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Falha ao carregar CSV (${res.status})`);
+      const text = await res.text();
+      const rows = parseCSV(text);
+
+      // Mapeia colunas com nomes diferentes
+      allProducts = rows.map(r => {
+        const categoria = pick(r, ["categoria", "category", "categoria_do_produto"]);
+        const imagem = pick(r, ["imagem", "image", "img", "foto"]);
+        const codigo = pick(r, ["codigo", "cod", "código", "sku"]);
+        const nome = pick(r, ["nome", "produto", "name"]);
+        const marca = pick(r, ["marca", "brand"]);
+        const it = pick(r, ["it", "italiano", "descrizione", "descricao_it"]);
+        const qtd = pick(r, ["qtdcaixa", "qtd", "quantidade", "qtd/caixa"]);
+        const preco = pick(r, ["valorunidade", "preco", "preço", "valor", "valor unidade"]);
+
+        return {
+          categoria,
+          imagem,
+          codigo,
+          nome,
+          marca,
+          it,
+          qtd,
+          preco,
+        };
+      });
+
+      renderCategories(allProducts);
+      visibleProducts = [...allProducts];
+      renderGrid(visibleProducts);
+      applyFilters(); // garante status correto
+    } catch (err) {
+      console.error(err);
+      if (el.status) el.status.textContent = "Erro ao carregar produtos.";
     }
-
-    const rows = parseCSV(text);
-
-    allProducts = rows.map((r) => ({
-      imagem: r.imagem || r["imagem ilustrativa"] || r["Imagem"] || "",
-      codigo: r.codigo || r["código"] || r["Codigo"] || "",
-      categoria: r.categoria || r["tipo"] || r["Tipo"] || "",
-      nome: r.nome || r["produto"] || r["Produto"] || "",
-      descricao: r.descricao || r["descrição"] || r["Descrição"] || "",
-      // ✅ NOVO: Italiano (pela sua planilha, a coluna chama "Italiano")
-      italiano: r.Italiano || r.italiano || r["Nome Italiano"] || r["nome_italiano"] || "",
-      qtd_caixa: r.qtd_caixa || r["quantidade por caixa"] || r["Quantidade por caixa"] || "",
-      valor_un: r.valor_un || r["valor por unidade"] || r["Valor por unidade"] || "",
-      valor_total: r.valor_total || r["valor total"] || r["Valor total"] || "",
-    }));
-
-    buildCategoryOptions(allProducts);
-
-    if (statusEl) statusEl.textContent = `${allProducts.length} produto(s)`;
-    render(allProducts);
-  } catch (err) {
-    if (statusEl)
-      statusEl.textContent =
-        "Erro ao carregar catálogo. Verifique o arquivo products.csv.";
-    console.error(err);
-  }
-}
-
-// ======= PRINT (somente catálogo) =======
-function printCatalogOnly() {
-  const catalogo = document.getElementById("catalogo");
-  if (!catalogo) return window.print();
-
-  const original = document.body.innerHTML;
-
-  document.body.innerHTML = `
-    <div style="padding:16px">
-      ${catalogo.outerHTML}
-    </div>
-  `;
-
-  document.querySelectorAll(".no-print").forEach((el) => el.remove());
-
-  window.print();
-
-  document.body.innerHTML = original;
-  location.reload();
-}
-
-// ======= POPUP PROMO FEIJOADA =======
-(function promoFeijoadaAlways() {
-  const overlay = document.getElementById("promoOverlay");
-  if (!overlay) return;
-
-  function openPromo() {
-    overlay.classList.add("is-open");
-    overlay.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
   }
 
-  function closePromo() {
-    overlay.classList.remove("is-open");
-    overlay.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
+  // ====== PROMO POPUP ======
+  function initPromo() {
+    if (!el.promoOverlay || !el.promoImg || !el.promoClose) return;
+
+    el.promoImg.src = PROMO_IMAGE_URL;
+
+    // Se a imagem não existir, o popup não aparece e não deixa "erro" no final
+    el.promoImg.onerror = () => {
+      el.promoOverlay.remove();
+    };
+
+    el.promoClose.addEventListener("click", () => {
+      el.promoOverlay.classList.remove("open");
+      try { sessionStorage.setItem("promoClosed", "1"); } catch (_) {}
+    });
+
+    el.promoOverlay.addEventListener("click", (e) => {
+      if (e.target === el.promoOverlay) el.promoClose.click();
+    });
+
+    // Aparece 1x por sessão
+    let closed = false;
+    try { closed = sessionStorage.getItem("promoClosed") === "1"; } catch (_) {}
+    if (!closed) el.promoOverlay.classList.add("open");
   }
 
-  window.addEventListener("load", () => {
-    setTimeout(openPromo, 200);
-  });
+  // ====== PRINT / PDF ======
+  function initPrint() {
+    if (!el.btnPrint) return;
+    el.btnPrint.addEventListener("click", () => {
+      // Só chama o print: a CSS @media print controla o que aparece
+      window.print();
+    });
+  }
 
-  overlay.addEventListener("click", closePromo);
+  // ====== EVENTS ======
+  el.search.addEventListener("input", applyFilters);
+  el.category.addEventListener("change", applyFilters);
+  window.addEventListener("resize", setHeaderOffset);
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlay.classList.contains("is-open")) {
-      closePromo();
-    }
-  });
+  // ====== START ======
+  setHeaderOffset();
+  initPromo();
+  initPrint();
+  loadProducts();
 })();
-
-// ======= EVENTOS =======
-if (searchEl) searchEl.addEventListener("input", applyFilters);
-if (categoryEl) categoryEl.addEventListener("change", applyFilters);
-
-if (btnPrint) btnPrint.addEventListener("click", printCatalogOnly);
-
-if (whatsLink) {
-  whatsLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    const url = `https://wa.me/${WHATSAPP_NUMBER}`;
-    window.open(url, "_blank");
-  });
-}
-
-// ======= START =======
-load();
