@@ -1,172 +1,141 @@
 <!doctype html>
-
 <html lang="pt-br">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Terra dei Pappagalli | Prodotti Brasiliani</title>
-<link href="styles.css" rel="stylesheet"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terra dei Papagalli | Prodotti Brasiliani</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-<header class="header no-print">
-<div class="brand">
-<img alt="Terra dei Pappagalli" class="logo" src="imagem/logo_prodotti.png"/>
-<div class="brand-text">
-<h1>Terra dei Pappagalli</h1>
-<div class="descriptor">Prodotti Brasiliani</div>
-</div>
-</div>
-<nav class="nav">
-<a class="nav-link" href="#quem-somos">
-<span>Quem somos</span>
-<span class="it">Chi siamo</span>
-</a>
-<a class="nav-link" href="#produtos">
-<span>Produtos</span>
-<span class="it">Prodotti</span>
-</a>
-<a class="nav-link" href="#contato">
-<span>Contato</span>
-<span class="it">Contatti</span>
-</a>
-<button class="btn" id="btnPrint" type="button">
-<span>Salvar em PDF</span>
-<span class="it">Scarica PDF</span>
-</button>
-</nav>
-</header>
+  <header class="header">
+    <div class="brand">
+      <img class="logo" src="imagem/logo.png" alt="Terra dei Papagalli" />
+      <div class="brand-text">
+        <h1>Terra dei Papagalli</h1>
+        <p class="descriptor">Prodotti Brasiliani</p>
+      </div>
+    </div>
 
-<!-- POPUP PROMO -->
-<div id="promoOverlay">
-  <div id="promoBox">
-    <img id="promoImg" alt="Promoção" loading="eager">
-    <button id="promoClose" aria-label="Fechar" type="button">×</button>
+    <nav class="nav no-print">
+      <a href="#quem-somos">Quem somos</a>
+      <a href="#produtos">Produtos</a>
+      <a href="#contato">Contato</a>
+      <button id="btnPrint" class="btn">Salvar em PDF</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="quem-somos" class="section">
+      <img class="quem-somos" src="imagem/quemsomos.png" alt="Terra dei Papagalli" height="110"/>
+      <strong>Quem somos</strong>
+    </section>
+
+    <p>Nos séculos das grandes navegações, viajantes europeus descreviam o Brasil como “Terra dei Papagalli” — a Terra dos Papagaios.</p>
+    <p>O nome fazia referência à exuberância natural, às cores vibrantes e à riqueza cultural que encantavam quem chegava ao Novo Mundo.</p>
+    <p><b>Terra dei Papagalli</b> homenageia o olhar italiano sobre o Brasil, unindo tradição europeia e identidade brasileira em uma só expressão.</p>
+    <p>A empresa nasce com esse espírito: trazer à Itália produtos autênticos do Brasil, preservando sua origem, sua qualidade e sua essência.</p>
+    <p>Terra dei Papagalli é um reencontro entre duas culturas que sempre dialogaram.</p>
+    <p>É isso que fazemos: levamos o Brasil até você.</p>
+    <p>A Terra dei Papagalli conecta Brasil e Itália com produtos brasileiros autênticos para brasileiros que moram na Itália e italianos que amam a cultura do Brasil.</p>
+
+    <h4>Posicionamento da Marca</h4>
+    <p><b>A Terra dei Papagalli</b> posiciona-se como uma ponte entre Brasil e Itália, oferecendo produtos brasileiros autênticos para consumidores que desejam manter ou descobrir a conexão com o Brasil.</p>
+    <p>A marca não atua como boutique "gourmet" nem como mercado temático, mas como importadora acessível e confiável, que disponibiliza produtos do cotidiano brasileiro para quem deseja qualidade, familiaridade e proximidade cultural.</p>
+    <p>Seu papel é simples e claro: levar o Brasil para quem está na Itália.</p>
+
+    <h4>Público-Alvo</h4>
+    <p>A marca atende dois públicos principais:</p>
+    <p><b>1. Brasileiros residentes na Itália</b></p>
+    <p>Pessoas que sentem saudade dos sabores, marcas e produtos do Brasil e desejam manter suas referências culturais no dia a dia.</p>
+    <p><b>2. Italianos interessados na cultura brasileira</b></p>
+    <p>Consumidores curiosos, abertos a novos sabores e experiências, que buscam produtos autênticos e originais.</p>
+    <p>O público é diverso, mas compartilha algo em comum: a valorização da autenticidade e da origem dos produtos.</p>
+
+    <br>
+    <p><b>Trabalhamos com estoque local e disponibilidade para pronta entrega conforme catálogo.</b></p>
+    <br>
+    <br>
+
+    <div id="catalogo">
+      <section id="produtos" class="section">
+        <img class="produtos" src="imagem/produtos.png" alt="Terra dei Papagalli" height="110"/>
+        <strong>Produtos</strong>
+      </section>
+
+      <div class="section-head">
+        <div class="filters no-print">
+          <input id="search" type="search" placeholder="Buscar produto..." />
+          <select id="category">
+            <option value="">Todas as categorias</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div id="status" class="status">Carregando catálogo...</div>
+      </div>
+
+      <div id="grid" class="grid" aria-live="polite"></div>
+
+      <br>
+      <br>
+    </div>
+
+    <section id="contato" class="section">
+      <img class="contato" src="imagem/contato.png" alt="Terra dei Papagalli" height="110"/>
+      <strong>Contato</strong>
+    </section>
+
+    <div class="contact">
+      <div>
+        <h3>WhatsApp</h3>
+        <p><a href="#" id="whatsLink">Clique para abrir</a></p>
+      </div>
+
+      <br>
+      <br>
+
+      <div>
+        <h3>E-mail</h3>
+        <p><a href="mailto:rapaganotti@gmail.com">Contate-nos</a></p>
+      </div>
+
+      <br>
+      <br>
+
+      <div>
+        <h3>Local</h3>
+        <p>Itália - Dueville</p>
+      </div>
+    </div>
+  </main>
+
+  <br>
+  <br>
+
+  <footer class="footer">
+    <div>
+      <img class="logo" src="imagem/logo.png" alt="Terra dei Papagalli" height="30"/>
+    </div>
+    <div class="no-print">
+      <!-- <small>Atualize o catálogo substituindo o arquivo <code>products.csv</code>.</small> -->
+    </div>
+  </footer>
+
+  <!-- ======= POPUP PROMO FEIJOADA ======= -->
+  <div id="promoOverlay" class="promo-overlay" aria-hidden="true">
+    <div class="promo-box" role="dialog" aria-modal="true" aria-label="Promoção Kit Feijoada">
+      <img
+        class="promo-img"
+        src="imagem/propaganda.png"
+        alt="Promoção: Kit Feijoada 1Kg"
+        loading="eager"
+      />
+    </div>
   </div>
-</div>
+  <!-- ======= /POPUP PROMO FEIJOADA ======= -->
 
-<main class="container">
-<section class="print-only" id="printHeader">
-<div style="display:flex;align-items:center;gap:18px;margin-bottom:14px">
-<img alt="Terra dei Pappagalli" src="imagem/logo_prodotti.png" style="width:180px;height:auto"/>
-<div>
-<div style="font-size:26px;font-weight:800;color:#163c2f;line-height:1">Terra dei Pappagalli</div>
-<div style="font-size:14px;color:#6b6b6b;margin-top:4px">Prodotti Brasiliani</div>
-</div>
-<div style="margin-left:auto;font-size:12px;line-height:1.4">
-<div><b>E-mail:</b> magiolo1945@gmail.com</div>
-<div><b>Local:</b> Itália - Dueville</div>
-</div>
-</div>
-</section>
-
-<!-- ===== QUEM SOMOS ===== -->
-<section class="section no-print" id="quem-somos">
-<div class="title-row">
-<img alt="" class="section-icon" src="imagem/quemsomos.png"/>
-<div>
-<h2>Quem somos</h2>
-<div class="it-sub">Chi siamo</div>
-</div>
-</div>
-<p>Nos séculos das grandes navegações, viajantes europeus descreviam o Brasil como “Terra dei Pappagalli” — a Terra dos Papagaios.</p>
-<p>O nome fazia referência à exuberância natural, às cores vibrantes e à riqueza cultural que encantavam quem chegava ao Novo Mundo.</p>
-<p><b>Terra dei Pappagalli</b> homenageia o olhar italiano sobre o Brasil, unindo tradição europeia e identidade brasileira em uma só expressão.</p>
-<p>A empresa nasce com esse espírito: trazer à Itália produtos autênticos do Brasil, preservando sua origem, sua qualidade e sua essência.</p>
-<p>Terra dei Pappagalli é um reencontro entre duas culturas que sempre dialogaram.</p>
-<p>É isso que fazemos: levamos o Brasil até você.</p>
-<p>A Terra dei Pappagalli conecta Brasil e Itália com produtos brasileiros autênticos para brasileiros que moram na Itália e italianos que amam a cultura do Brasil.</p>
-
-<h3 style="margin-top:18px">Posicionamento da Marca</h3>
-<p><b>A Terra dei Pappagalli</b> posiciona-se como uma ponte entre Brasil e Itália, oferecendo produtos brasileiros autênticos para consumidores que desejam manter ou descobrir a conexão com o Brasil.</p>
-<p>A marca não atua como boutique “gourmet” nem como mercado temático, mas como importadora acessível e confiável, que disponibiliza produtos do cotidiano brasileiro para quem deseja qualidade, familiaridade e proximidade cultural.</p>
-<p>Seu papel é simples e claro: levar o Brasil para quem está na Itália.</p>
-
-<h3 style="margin-top:18px">Público-Alvo</h3>
-<p>A marca atende dois públicos principais:</p>
-<p><b>1. Brasileiros residentes na Itália</b><br/>
-Pessoas que sentem saudade dos sabores, marcas e produtos do Brasil e desejam manter suas referências culturais no dia a dia.</p>
-<p><b>2. Italianos interessados na cultura brasileira</b><br/>
-Consumidores curiosos, abertos a novos sabores e experiências, que buscam produtos autênticos e originais.</p>
-<p>O público é diverso, mas compartilha algo em comum: a valorização da autenticidade e da origem dos produtos.</p>
-<p><b>Trabalhamos com estoque local e disponibilidade para pronta entrega conforme catálogo.</b></p>
-
-<div class="quadrado">
-<p><b>Nei secoli delle grandi navigazioni,</b> i viaggiatori europei descrivevano il Brasile come “Terra dei Pappagalli” — la Terra dei Pappagalli.</p>
-<p>Il nome faceva riferimento all’esuberanza naturale, ai colori vibranti e alla ricchezza culturale che affascinavano chi arrivava nel Nuovo Mondo.</p>
-<p><b>Terra dei Pappagalli</b> rende omaggio allo sguardo italiano sul Brasile, unendo tradizione europea e identità brasiliana in un’unica espressione.</p>
-<p>L’azienda nasce con questo spirito: portare in Italia prodotti autentici del Brasile, preservandone l’origine, la qualità e l’essenza.</p>
-<p>Terra dei Pappagalli è un incontro tra due culture che da sempre dialogano.</p>
-<p>Questo è ciò che facciamo: portiamo il Brasile fino a te.</p>
-<p>Terra dei Pappagalli collega Brasile e Italia attraverso prodotti brasiliani autentici, dedicati ai brasiliani che vivono in Italia e agli italiani che amano la cultura brasiliana.</p>
-
-<p style="margin-top:14px"><b>Posizionamento del Marchio</b></p>
-<p>Terra dei Pappagalli si posiziona come un ponte tra Brasile e Italia, offrendo prodotti brasiliani autentici a consumatori che desiderano mantenere o scoprire il legame con il Brasile.</p>
-<p>Il marchio non opera come boutique “gourmet” né come mercato tematico, ma come importatore accessibile e affidabile, che mette a disposizione prodotti della quotidianità brasiliana per chi cerca qualità, familiarità e vicinanza culturale.</p>
-<p>Il suo ruolo è semplice e chiaro: portare il Brasile a chi si trova in Italia.</p>
-
-<p style="margin-top:14px"><b>Pubblico di riferimento</b></p>
-<p>Il marchio si rivolge a due principali gruppi:</p>
-<p><b>1. Brasiliani residenti in Italia</b><br/>
-Persone che sentono nostalgia dei sapori, dei marchi e dei prodotti del Brasile e desiderano mantenere le proprie radici culturali nella vita quotidiana.</p>
-<p><b>2. Italiani interessati alla cultura brasiliana</b><br/>
-Consumatori curiosi, aperti a nuovi sapori ed esperienze, alla ricerca di prodotti autentici e originali.</p>
-<p>Il pubblico è eterogeneo, ma condivide un elemento fondamentale: la valorizzazione dell’autenticità e dell’origine dei prodotti.</p>
-<p><i>Lavoriamo con magazzino locale e disponibilità per pronta consegna secondo catalogo.</i></p>
-</div>
-</section>
-
-<!-- ===== PRODUTOS ===== -->
-<section class="section" id="produtos">
-<div class="title-row">
-<img alt="" class="section-icon" src="imagem/produtos.png"/>
-<div>
-<h2>Produtos</h2>
-<div class="it-sub">Prodotti</div>
-</div>
-</div>
-
-<div class="controls no-print">
-<input id="search" placeholder="Buscar produto..." type="text"/>
-<select id="category"></select>
-<div class="status" id="status">Carregando...</div>
-</div>
-
-<div class="grid" id="grid"></div>
-</section>
-
-<!-- ===== CONTATO ===== -->
-<section class="section no-print" id="contato">
-<div class="title-row">
-<img alt="" class="section-icon" src="imagem/contato.png"/>
-<div>
-<h2>Contato</h2>
-<div class="it-sub">Contatti</div>
-</div>
-</div>
-
-<div class="contact-grid">
-<div class="contact-card">
-<h3>WhatsApp</h3>
-<div class="label">
-<a href="#" id="whatsLink">Clique para abrir <span class="it-inline">(Clicca per aprire)</span></a>
-</div>
-</div>
-
-<div class="contact-card">
-<h3>E-mail</h3>
-<div class="label">
-<a href="mailto:magiolo1945@gmail.com">Contate-nos <span class="it-inline">(Contattaci)</span></a>
-</div>
-</div>
-
-<div class="contact-card">
-<h3>Local <span class="it-inline">(Dove siamo)</span></h3>
-<div class="label">Itália - Dueville</div>
-</div>
-</div>
-</section>
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
