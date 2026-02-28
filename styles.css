@@ -227,10 +227,10 @@ h2{
   font-size: 14px;
 }
 
-/* Grid 4 colunas */
+/* Grid 5 colunas */
 .products-grid{
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px;
   align-items: start;
 }
@@ -405,13 +405,14 @@ h2{
 
 .grid{ /* alias do grid de produtos */
   display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
+  grid-template-columns:repeat(5, minmax(0, 1fr));
   gap:18px;
   align-items:start;
 }
-@media (max-width:1200px){ .grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
-@media (max-width:900px){ .grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
-@media (max-width:520px){ .grid{ grid-template-columns:1fr; } }
+@media (max-width:1400px){ .grid{ grid-template-columns:repeat(4, minmax(0, 1fr)); } }
+@media (max-width:1100px){ .grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
+@media (max-width:800px){ .grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+@media (max-width:500px){ .grid{ grid-template-columns:1fr; } }
 
 .status{ color:var(--muted); font-size:14px; }
 
