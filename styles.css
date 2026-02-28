@@ -189,6 +189,7 @@ h2{
   border: 1px solid #cfe9d2;
   border-radius: 14px;
   width: 80%;          /* ocupa 80% */
+  max-width: 900px;
   padding: 14px 18px;
   margin-top: 14px;
 }
