@@ -1,21 +1,25 @@
 /* =========================================================
-   Terra dei Pappagalli - script.js (COMPLETO)
+   Terra dei Pappagalli - script.js (COMPLETO, compatível com seu HTML)
+   HTML IDs esperados:
+   - #grid      (container dos cards)
+   - #search    (input de busca)
+   - #category  (select de categorias)
+   - #status    (texto "Carregando..." / contador)
+   - #btnPrint  (botão salvar em PDF) [opcional]
+   - #printHeader (header de impressão) [opcional]
    ========================================================= */
 
-/** Caminho do CSV (ajuste se você mudar a estrutura do repo) */
-const CSV_URL = "./products.csv";
+const CSV_URL = "./products.csv"; // seu products.csv está na raiz do repo
 
-/** Estado */
 let allProducts = [];
 let filteredProducts = [];
 
-/** Elementos da UI (IDs devem existir no index.html) */
+// Elementos
 let elGrid, elSearch, elCategory, elStatus, elBtnPrint, elPrintHeader;
 
 /* -----------------------------
    Utilidades
 ----------------------------- */
-
 function normalize(str) {
   return String(str ?? "")
     .normalize("NFD")
@@ -24,7 +28,6 @@ function normalize(str) {
     .trim();
 }
 
-/** Pega o primeiro campo existente entre várias chaves possíveis */
 function pick(obj, keys) {
   for (const k of keys) {
     if (obj && Object.prototype.hasOwnProperty.call(obj, k)) {
@@ -35,7 +38,16 @@ function pick(obj, keys) {
   return "";
 }
 
-/** Converte para moeda EUR aceitando "€ 2,27", "2,27", "2.27" etc. */
+function esc(s) {
+  return String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/** Converte "€ 2,27" / "2,27" / "2.27" em moeda */
 function moneyEUR(v) {
   const raw = String(v ?? "").trim();
   if (!raw) return "";
@@ -49,25 +61,13 @@ function moneyEUR(v) {
   return n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
 }
 
-/** Escapa HTML (evita quebrar layout) */
-function esc(s) {
-  return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 /* -----------------------------
    CSV Parser (detecta ; ou ,)
 ----------------------------- */
-
 function parseCSV(text) {
   const t = String(text ?? "").replace(/^\uFEFF/, ""); // remove BOM
   if (!t.trim()) return [];
 
-  // detecta delimitador via cabeçalho
   const firstLine = t.split(/\r?\n/)[0] || "";
   const semi = (firstLine.match(/;/g) || []).length;
   const comma = (firstLine.match(/,/g) || []).length;
@@ -102,7 +102,7 @@ function parseCSV(text) {
       continue;
     }
 
-    // quebra de linha
+    // fim de linha
     if ((ch === "\n" || ch === "\r") && !inQuotes) {
       if (ch === "\r" && next === "\n") i++;
       row.push(cur);
@@ -123,7 +123,7 @@ function parseCSV(text) {
 
   if (rows.length === 0) return [];
 
-  const headers = rows[0].map(h => normalize(h).trim());
+  const headers = rows[0].map(h => normalize(h));
   const data = [];
 
   for (let r = 1; r < rows.length; r++) {
@@ -132,7 +132,7 @@ function parseCSV(text) {
       obj[headers[c] || `col_${c}`] = String(val ?? "").trim();
     });
 
-    // pula linha completamente vazia
+    // pula linha vazia
     if (Object.values(obj).some(v => v !== "")) data.push(obj);
   }
 
@@ -140,63 +140,11 @@ function parseCSV(text) {
 }
 
 /* -----------------------------
-   Carregamento de produtos
+   UI helpers
 ----------------------------- */
-
-async function loadProducts() {
-  setStatus("Caricamento prodotti…");
-
-  const res = await fetch(CSV_URL, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Erro ao carregar CSV (${res.status})`);
-  }
-
-  const csvText = await res.text();
-  const rows = parseCSV(csvText);
-
-  // Mapeamento do seu CSV:
-  // imagem,codigo,categoria,nome,descricao,qtd_caixa,valor_un,Italiano
-  allProducts = rows.map(r => {
-    const categoria = pick(r, ["categoria"]);
-    let imagem = pick(r, ["imagem"]);
-    const codigo = pick(r, ["codigo"]);
-    const nome = pick(r, ["nome"]);
-    const descricao = pick(r, ["descricao"]);
-    const italiano = pick(r, ["italiano"]); // normalize() transforma "Italiano" em "italiano"
-    const qtdCaixa = pick(r, ["qtd_caixa", "qtdcaixa", "qtd", "quantidade"]);
-    const valorUn = pick(r, ["valor_un", "valorun", "valor", "preco", "preço"]);
-
-    // Normaliza caminho de imagem:
-    // se vier "produto.png" vira "imagem/produto.png"
-    // se vier "imagem/produto.png" mantém
-    // se vier URL http, mantém
-    if (imagem && !imagem.includes("/") && !imagem.startsWith("http")) {
-      imagem = `imagem/${imagem}`;
-    }
-
-    return {
-      categoria,
-      imagem,
-      codigo,
-      nome,
-      descricao,
-      italiano,
-      qtdCaixa,
-      valorUn
-    };
-  });
-
-  filteredProducts = [...allProducts];
-
-  populateCategories(allProducts);
-  renderProducts(filteredProducts);
-
-  setStatus(`${filteredProducts.length} prodotto(i)`);
+function setStatus(msg) {
+  if (elStatus) elStatus.textContent = msg;
 }
-
-/* -----------------------------
-   UI: filtros e render
------------------------------ */
 
 function populateCategories(items) {
   if (!elCategory) return;
@@ -205,9 +153,11 @@ function populateCategories(items) {
     new Set(items.map(p => (p.categoria || "").trim()).filter(Boolean))
   ).sort((a, b) => a.localeCompare(b, "it"));
 
-  // preserva primeira opção (ex.: "Todas as categorias")
-  const first = elCategory.querySelector("option")?.outerHTML ?? "";
-  elCategory.innerHTML = first || `<option value="">Tutte le categorie</option>`;
+  // Mantém a primeira opção do HTML (se existir)
+  const firstOpt = elCategory.querySelector("option");
+  const firstHTML = firstOpt ? firstOpt.outerHTML : `<option value="">Tutte le categorie</option>`;
+
+  elCategory.innerHTML = firstHTML;
 
   for (const c of cats) {
     const opt = document.createElement("option");
@@ -219,20 +169,16 @@ function populateCategories(items) {
 
 function applyFilters() {
   const q = normalize(elSearch?.value ?? "");
-  const cat = (elCategory?.value ?? "").trim();
+  const cat = String(elCategory?.value ?? "").trim();
 
   filteredProducts = allProducts.filter(p => {
-    if (cat && (p.categoria || "").trim() !== cat) return false;
+    if (cat && String(p.categoria ?? "").trim() !== cat) return false;
     if (!q) return true;
 
     const hay = normalize(
-      [
-        p.nome,
-        p.descricao,
-        p.italiano,
-        p.codigo,
-        p.categoria
-      ].filter(Boolean).join(" ")
+      [p.nome, p.descricao, p.italiano, p.codigo, p.categoria]
+        .filter(Boolean)
+        .join(" ")
     );
 
     return hay.includes(q);
@@ -242,58 +188,58 @@ function applyFilters() {
   setStatus(`${filteredProducts.length} prodotto(i)`);
 }
 
+/* -----------------------------
+   Render
+----------------------------- */
 function renderProducts(items) {
   if (!elGrid) return;
+
   elGrid.innerHTML = "";
 
-  // fallback se não tiver nada
   if (!items || items.length === 0) {
-    const empty = document.createElement("div");
-    empty.style.padding = "16px";
-    empty.textContent = "Nessun prodotto trovato.";
-    elGrid.appendChild(empty);
+    elGrid.innerHTML = `<div style="padding:16px">Nessun prodotto trovato.</div>`;
     return;
   }
 
   for (const p of items) {
     const card = document.createElement("article");
-    card.className = "product-card";
 
-    const imgHtml = p.imagem
-      ? `<img class="product-image" src="${esc(p.imagem)}" alt="${esc(p.nome)}" loading="lazy" />`
-      : `<div class="product-image placeholder"></div>`;
-
-    const badgeHtml = p.categoria
-      ? `<span class="badge category">${esc(p.categoria)}</span>`
-      : "";
+    // IMPORTANTÍSSIMO:
+    // Seu CSS original do repo usa classes "card", "card-img", etc.
+    // (pelo que eu vi no seu script anterior).
+    // Vou manter esse padrão para bater com o seu CSS atual.
+    card.className = "card";
 
     const nome = p.nome || "";
-    const sub = p.italiano || ""; // linha italiana em destaque leve
+    const categoria = p.categoria || "";
+    const it = p.italiano || "";
     const desc = p.descricao || "";
     const qtd = p.qtdCaixa || "";
     const preco = moneyEUR(p.valorUn) || "";
 
+    const imgSrc = p.imagem ? esc(p.imagem) : "";
+
     card.innerHTML = `
-      <div class="product-media">
-        ${imgHtml}
-        <div class="product-badges">${badgeHtml}</div>
+      <div class="card-img">
+        ${imgSrc ? `<img src="${imgSrc}" alt="${esc(nome)}" loading="lazy">` : ""}
       </div>
 
-      <div class="product-body">
-        <h3 class="product-title">${esc(nome)}</h3>
-        ${sub ? `<div class="product-subtitle it-inline">${esc(sub)}</div>` : ""}
-        ${desc ? `<p class="product-desc">${esc(desc)}</p>` : ""}
+      <div class="card-body">
+        ${categoria ? `<div class="badge-cat">${esc(categoria)}</div>` : ""}
+        <div class="prod-name">${esc(nome)}</div>
+        ${it ? `<div class="prod-it">${esc(it)}</div>` : ""}
+        ${desc ? `<div class="prod-desc">${esc(desc)}</div>` : ""}
       </div>
 
-      <div class="product-footer">
-        <div class="product-meta">
-          <div class="meta-item">
-            <span class="meta-label">Qtd/caixa</span>
-            <span class="meta-value">${esc(qtd)}</span>
+      <div class="card-footer">
+        <div class="meta">
+          <div class="meta-left">
+            <div class="meta-label">Qtd/caixa</div>
+            <div class="meta-value">${esc(qtd)}</div>
           </div>
-          <div class="meta-item">
-            <span class="meta-label">Valor unidade</span>
-            <span class="meta-value">${esc(preco)}</span>
+          <div class="meta-right">
+            <div class="meta-label">Valor unidade</div>
+            <div class="meta-value">${esc(preco)}</div>
           </div>
         </div>
       </div>
@@ -303,36 +249,63 @@ function renderProducts(items) {
   }
 }
 
-function setStatus(msg) {
-  if (elStatus) elStatus.textContent = msg;
+/* -----------------------------
+   Carregamento do CSV e mapeamento
+----------------------------- */
+async function loadProducts() {
+  setStatus("Carregando...");
+
+  const res = await fetch(CSV_URL, { cache: "no-store" });
+  if (!res.ok) throw new Error(`CSV fetch falhou (${res.status})`);
+
+  const csvText = await res.text();
+  const rows = parseCSV(csvText);
+
+  // Seus headers: imagem,codigo,categoria,nome,descricao,qtd_caixa,valor_un,Italiano
+  allProducts = rows.map(r => {
+    let imagem = pick(r, ["imagem"]);
+    const codigo = pick(r, ["codigo"]);
+    const categoria = pick(r, ["categoria"]);
+    const nome = pick(r, ["nome"]);
+    const descricao = pick(r, ["descricao"]);
+    const italiano = pick(r, ["italiano"]); // "Italiano" vira "italiano" no normalize
+    const qtdCaixa = pick(r, ["qtd_caixa", "qtdcaixa", "qtd", "quantidade"]);
+    const valorUn = pick(r, ["valor_un", "valorun", "valor", "preco", "preço"]);
+
+    // Normaliza caminho de imagem (pasta "imagem" na raiz do repo)
+    if (imagem && !imagem.includes("/") && !imagem.startsWith("http")) {
+      imagem = `imagem/${imagem}`;
+    }
+
+    return { imagem, codigo, categoria, nome, descricao, italiano, qtdCaixa, valorUn };
+  });
+
+  filteredProducts = [...allProducts];
+
+  populateCategories(allProducts);
+  renderProducts(filteredProducts);
+  setStatus(`${filteredProducts.length} prodotto(i)`);
 }
 
 /* -----------------------------
-   Print / PDF
+   Print
 ----------------------------- */
-
 function doPrint() {
-  // Se existir cabeçalho de print, garante que esteja “pronto”
-  if (elPrintHeader) {
-    // você pode ajustar algo aqui se quiser
-  }
   window.print();
 }
 
 /* -----------------------------
-   Init
+   INIT (compatível com seu HTML)
 ----------------------------- */
-
 async function init() {
-  // captura elementos
-  elGrid = document.getElementById("productGrid");
-  elSearch = document.getElementById("searchInput");
-  elCategory = document.getElementById("categorySelect");
-  elStatus = document.getElementById("statusText");
+  // IDs conforme seu DevTools:
+  elGrid = document.getElementById("grid");
+  elSearch = document.getElementById("search");
+  elCategory = document.getElementById("category");
+  elStatus = document.getElementById("status");
   elBtnPrint = document.getElementById("btnPrint");
-  elPrintHeader = document.getElementById("printHeader");
+  elPrintHeader = document.getElementById("printHeader"); // opcional
 
-  // listeners
   if (elSearch) elSearch.addEventListener("input", applyFilters);
   if (elCategory) elCategory.addEventListener("change", applyFilters);
   if (elBtnPrint) elBtnPrint.addEventListener("click", doPrint);
@@ -346,8 +319,7 @@ async function init() {
       elGrid.innerHTML = `
         <div style="padding:16px">
           <strong>Erro ao carregar o catálogo.</strong><br/>
-          Verifique se <code>products.csv</code> está no mesmo nível do <code>index.html</code>
-          e se as imagens estão na pasta <code>/imagem</code>.
+          Verifique se <code>products.csv</code> está na raiz do projeto e acessível.
         </div>
       `;
     }
