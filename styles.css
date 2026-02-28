@@ -422,6 +422,7 @@ h2{
   border-radius:14px;
   padding:16px 18px;
   margin-top:14px;
+  align-self: center;
 }
 .quadrado .it-sub{ color:var(--red); }
 
