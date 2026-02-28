@@ -247,7 +247,6 @@ function renderProducts(items) {
       </div>
 
       <div class="product-body">
-  //          ${codigo ? `<span class="badge">Cód: ${esc(codigo)}</span>` : ""}
         <div class="badges">
           ${categoria ? `<span class="badge category">${esc(categoria)}</span>` : ""}
         </div>
