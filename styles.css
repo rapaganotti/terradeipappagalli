@@ -308,7 +308,7 @@ h2{
 }
 
 .product-title{
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 900;
   letter-spacing: .2px;
   margin: 6px 0 6px 0;
@@ -316,14 +316,14 @@ h2{
 
 .product-desc{
   color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
   margin-bottom: 4px;
 }
 
 .product-it{
   color: #666;
   font-style: italic;
-  font-size: 13px;
+  font-size: 10px;
   margin-bottom: 10px;
 }
 
@@ -342,7 +342,7 @@ h2{
 
 .prices .v{
   font-weight: 900;
-  font-size: 18px;
+  font-size: 14px;
 }
 
 /* =========================
