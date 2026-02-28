@@ -1,422 +1,272 @@
+/* =========================
+   RESET + BASE
+========================= */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:Arial,Helvetica,sans-serif;background:#f5f6f7;color:#1b1b1b}
+img{max-width:100%;display:block}
+a{color:inherit}
 :root{
-  --bg: #f6f7f8;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-  --border: #e5e7eb;
-
-  --green: #2c5b1e;
-  --green-soft: #e9fdeb;
-  --red: #c51e1e;
-  --pill: #eef2ff;
-  --pill-border: #dbe3ff;
+  --green:#2C5B1E;
+  --red:#EE232E;
+  --text:#1b1b1b;
+  --muted:#6b6b6b;
+  --border:#e2e2e2;
+  --card:#ffffff;
+  --header-h:160px; /* atualizado via JS */
 }
 
-html, body{
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.35;
-}
-
-*{ box-sizing: border-box; }
-
-img{ max-width: 100%; display:block; }
-
-a{ color: inherit; }
-
-.muted{ color: var(--muted); }
-
+/* Helpers */
+.muted{color:var(--muted)}
 .no-print{}
+.print-only{display:none}
 
 /* =========================
-   HEADER
+   HEADER FIXO (TELA)
 ========================= */
 .header{
-  /* FIXO na tela inteira */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 18px;
-  z-index: 9999;
+  position:fixed;
+  top:0;left:0;width:100%;
+  background:#fff;
+  z-index:9999;
+  border-bottom:1px solid var(--border);
+  padding:16px 40px;
 }
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap: 14px;
-}
-
-.logo{
-  width: 140px;
-  height: auto;
-}
-
-.brand-text h1{
-  font-size: 22px;
-  margin: 0;
-  line-height: 1.1;
-  color: #163c2f;
-}
-
-.descriptor{
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--muted);
-}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{width:140px;height:auto}
+.brand-text h1{font-size:24px;color:#163c2f;line-height:1}
+.descriptor{font-size:14px;color:var(--muted);margin-top:2px}
 
 .nav{
-  margin-top: 14px;
-  display:flex;
-  align-items:flex-start;
-  gap: 26px;
-  flex-wrap: wrap;
+  margin-top:14px;
+  display:flex;align-items:flex-end;gap:30px;
+  flex-wrap:wrap;
 }
-
 .nav-link{
   text-decoration:none;
-  font-weight: 700;
+  font-weight:700;
+  color:var(--green);
 }
-
-.nav-link span{ display:block; }
-
-.nav-link .it{
-  font-weight: 500;
-  color: var(--red);
-}
-
+.nav-link .it{display:block;font-weight:400;color:var(--red);margin-top:2px}
 .btn{
-  margin-left: auto;
-  background: #f3f4f6;
-  border: 1px solid var(--border);
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
+  margin-left:auto;
+  background:#f0f0f0;
+  border:1px solid #ddd;
+  padding:8px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
 }
+.btn .it{display:block;color:var(--red);font-weight:400;margin-top:2px}
 
-.btn .it{
-  color: var(--red);
-  font-weight: 500;
-}
-
-/* =========================
-   LAYOUT
-========================= */
+/* Espaço do conteúdo abaixo do header */
+body{padding-top:var(--header-h)}
 .container{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 170px 18px 48px; /* empurra abaixo do header fixo */
-}
-
-.section{
-  background: transparent;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.title-row{
-  display:flex;
-  align-items:center;
-  gap: 14px;
-  margin-bottom: 12px;
-}
-
-.section-icon{
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-}
-
-h2{
-  margin: 0;
-  font-size: 34px;
-}
-
-.it-sub{
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.section p{
-  margin: 12px 0;
-  line-height: 1.4;
-}
-
-.section h3{
-  margin-top: 18px;
-  margin-bottom: 8px;
-  font-size: 20px;
-}
-
-.quadrado{
-  background: var(--green-soft);
-  border: 1px solid #cfe9d2;
-  border-radius: 14px;
-  padding: 18px 18px;
-  margin-top: 18px;
-}
-
-.quadrado p{
-  margin: 10px 0;
-  line-height: 1.35;
+  padding:24px 40px 60px 40px;
+  max-width:1400px;
+  margin:0 auto;
 }
 
 /* =========================
-   PRODUTOS / FILTROS
+   SECTIONS
 ========================= */
-.section-head{
+.section{padding:28px 0;border-bottom:1px solid #e9e9e9}
+.title-row{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.section-icon{width:56px;height:56px;object-fit:contain}
+.section h2{font-size:34px;line-height:1.1}
+.it-sub{font-style:italic;color:var(--muted);margin-top:6px}
+
+/* Texto (Quem somos + Italiano) */
+.section p{
+  line-height:1.55;
+  margin:10px 0;
+  font-size:16px;
+}
+.quadrado{
+  background:#e9fdeb;
+  border:1px solid #cfe9d2;
+  border-radius:14px;
+  padding:16px 18px;
+  margin-top:16px;
+}
+
+/* =========================
+   PRODUTOS (GRID)
+========================= */
+.controls{
   display:flex;
+  gap:14px;
   align-items:center;
-  justify-content: space-between;
-  gap: 14px;
-  margin: 10px 0 8px;
+  flex-wrap:wrap;
+  margin:10px 0 14px 0;
 }
-
-.filters{
-  display:flex;
-  gap: 12px;
-  align-items:center;
-  flex-wrap: wrap;
+.controls input[type="text"], .controls select{
+  height:36px;
+  border:1px solid #d9d9d9;
+  border-radius:9px;
+  padding:0 12px;
+  background:#fff;
+  min-width:220px;
 }
+.controls .status{color:var(--muted);font-size:14px;margin-left:6px}
 
-#search{
-  width: 260px;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #fff;
-}
-
-#category{
-  min-width: 220px;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #fff;
-}
-
-.meta{
-  margin: 8px 0 14px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-/* 4 por linha (tela) */
 .grid{
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:18px;
+  align-items:stretch;
 }
 
-/* CARD */
+/* Responsivo */
+@media (max-width:1200px){
+  .grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+}
+@media (max-width:860px){
+  .header{padding:14px 18px}
+  .container{padding:18px 18px 50px 18px}
+  .grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .logo{width:120px}
+}
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
+
+/* Card */
 .card{
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 18px 30px rgba(0,0,0,.06);
+  background:var(--card);
+  border:1px solid #e7e7e7;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.05);
+  display:flex;
+  flex-direction:column;
 }
-
-.thumb{
-  height: 180px;
+.card-img{
+  height:160px;
   display:flex;
   align-items:center;
   justify-content:center;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 14px;
+  border-bottom:1px solid #eeeeee;
+  background:#fff;
 }
-
-.thumb img{
-  height: 100%;
-  width: auto;
-  object-fit: contain;
+.card-img img{
+  max-height:140px;
+  width:auto;
+  object-fit:contain;
 }
-
-.card-body{
-  padding: 14px 14px 16px;
-}
-
-.meta-row{
-  display:flex;
-  align-items:flex-start;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
+.card-body{padding:14px 14px 16px 14px;display:flex;flex-direction:column;gap:10px}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
 .badge{
-  display: inline-block;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 12px;
-  border: 1px solid transparent;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:12px;
+  border:1px solid #d8e2ff;
+  background:#eef3ff;
 }
+.badge-cat{
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:11.5px;
+  border:1px solid #c8efda;
+  background:#e9fff1;
+  color:#1d5a35;
 
-.badge.code{
-  background: var(--pill);
-  border-color: var(--pill-border);
+  /* não cortar: pode quebrar em 2+ linhas */
+  display:inline-block;
+  white-space:normal;
+  word-break:break-word;
+  max-width:100%;
+  line-height:1.25;
 }
+.prod-name{font-size:22px;line-height:1.15;font-weight:800;margin-top:4px}
+.prod-brand{color:var(--muted);font-size:13px}
+.prod-it{font-style:italic;color:var(--muted);font-size:12.5px}
 
-.badge.cat{
-  background: #ecfdf5;
-  border-color: #d1fae5;
-  color: var(--green);
-  max-width: 100%;
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.2;
-}
-
-.product-name{
-  margin: 0;
-  font-size: 18px;
-  letter-spacing: .2px;
-}
-
-.sub{
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.brand-line{
-  text-transform: uppercase;
-  letter-spacing: .4px;
-  font-size: 12px;
-}
-
-.it-line{
-  margin-top: 3px;
-  font-style: italic;
-}
-
-.bottom-row{
+.meta{
   display:flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 12px;
-  border-top: 1px solid var(--border);
-  padding-top: 10px;
+  justify-content:space-between;
+  gap:12px;
+  border-top:1px solid #eee;
+  padding-top:10px;
+  margin-top:2px;
+  font-size:13px;
 }
-
-.col .lbl{
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.col .val{
-  font-weight: 800;
-  margin-top: 2px;
-}
+.meta b{font-size:18px}
 
 /* =========================
    CONTATO
 ========================= */
-.contact{
+.contact-grid{
   display:grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  margin-top: 14px;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:22px;
+  margin-top:18px;
 }
-
-.contact h3{
-  margin: 0 0 8px;
-  color: var(--green);
+@media (max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.contact-card h3{
+  font-size:20px;
+  color:var(--green);
+  margin-bottom:10px;
 }
-
-.contact a{
-  color: var(--green);
-  text-decoration: none;
-}
-
-.contact a:hover{
-  text-decoration: underline;
-}
+.contact-card a{color:var(--green);text-decoration:none}
+.contact-card .it-inline{color:var(--red)}
+.contact-card .label{color:var(--muted)}
 
 /* =========================
-   FOOTER
+   POPUP PROMO
 ========================= */
-.footer{
-  padding: 28px 18px;
-  text-align:center;
-  color: var(--muted);
+#promoOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.55);
+  z-index:10000;
+  padding:18px;
 }
-
-.logo-footer{
-  max-width: 280px;
-  margin: 0 auto;
+#promoOverlay.open{display:flex}
+#promoBox{
+  background:#fff;
+  border-radius:18px;
+  max-width:900px;
+  width:min(900px, 98vw);
+  overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  position:relative;
 }
-
-/* =========================
-   POPUP
-========================= */
-.promo-overlay{
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.55);
-  z-index: 99999;
-  padding: 20px;
-}
-
-.promo-overlay.open{ display: flex; }
-
-.promo-box{
-  max-width: 760px;
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 30px 70px rgba(0,0,0,.35);
-}
-
-.promo-img{
-  width: 100%;
-  height: auto;
-  display:block;
+#promoBox img{width:100%;height:auto;display:block}
+#promoClose{
+  position:absolute;
+  top:10px;right:10px;
+  background:#ffffff;
+  border:1px solid #e5e5e5;
+  width:38px;height:38px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
 }
 
 /* =========================
-   RESPONSIVO
-========================= */
-@media (max-width: 980px){
-  .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .contact{ grid-template-columns: 1fr; }
-  .logo{ width: 120px; }
-  .brand-text h1{ font-size: 20px; }
-}
-
-@media (max-width: 560px){
-  .grid{ grid-template-columns: 1fr; }
-  #search{ width: 100%; }
-  #category{ width: 100%; }
-}
-
-/* =========================
-   PRINT
+   PRINT (Salvar em PDF)
+   - Imprime só Produtos + cabeçalho de impressão
 ========================= */
 @media print{
-  .no-print{ display: none !important; }
-  .header{ display: none !important; }
-  .container{ max-width: none; padding: 0 12px 0; }
-  .section{ border-bottom: none; padding: 10px 0; }
+  body{padding-top:0;background:#fff}
+  .no-print{display:none !important}
+  .print-only{display:block !important}
 
-  /* compacto */
-  .grid{ gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .card{ box-shadow: none; }
-  .card .thumb{ height: 140px; }
+  /* remove sombras para economizar tinta e páginas */
+  .card{box-shadow:none}
 
-  a{ color: #000; text-decoration: none; }
+  /* forçar 4 colunas no PDF */
+  .grid{grid-template-columns:repeat(4, minmax(0, 1fr));gap:12px}
+
+  /* esconder controles e popup */
+  .controls,#promoOverlay{display:none !important}
+
+  /* evitar quebra de card no meio */
+  .card{break-inside:avoid;page-break-inside:avoid}
+  .section{border:none}
 }
-
-/* durante a impressão (modo acionado pelo JS) */
-body.print-mode .promo-overlay{ display: none !important; }

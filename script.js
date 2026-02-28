@@ -1,277 +1,296 @@
-/* ======================================================
-   Terra dei Pappagalli | Catalogo
-   JS simples e estável:
-   - carrega products.csv
-   - renderiza cards
-   - busca + filtro por categoria
-   - botão "Salvar em PDF" chama window.print()
-   - popup abre 1x por sessão
-====================================================== */
+// Terra dei Pappagalli | Prodotti Brasiliani
+// Script principal: carrega CSV, renderiza cards, filtro e impressão.
 
-const CSV_PATH = 'products.csv';
+(function () {
+  "use strict";
 
-// Elementos
-const grid = document.getElementById('grid');
-const statusEl = document.getElementById('status');
-const searchEl = document.getElementById('search');
-const categoryEl = document.getElementById('category');
-const btnPrint = document.getElementById('btnPrint');
+  // ====== ELEMENTOS (IDs do HTML atual) ======
+  const el = {
+    header: document.querySelector(".header"),
+    btnPrint: document.getElementById("btnPrint"),
+    search: document.getElementById("search"),
+    category: document.getElementById("category"),
+    grid: document.getElementById("grid"),
+    status: document.getElementById("status"),
+    promoOverlay: document.getElementById("promoOverlay"),
+    promoImg: document.getElementById("promoImg"),
+    promoClose: document.getElementById("promoClose"),
+  };
 
-const promoOverlay = document.getElementById('promoOverlay');
-const promoClose = document.getElementById('promoClose');
-const promoLink = document.getElementById('promoLink');
-
-let allProducts = [];
-
-/* =========================
-   CSV PARSER
-========================= */
-function parseCSV(text) {
-  const cleanedText = (text || '').replace(/\uFEFF/g, ''); // remove BOM
-  const delim = cleanedText.includes(';') ? ';' : ',';
-
-  const lines = cleanedText
-    .split(/\r?\n/)
-    .map(l => l.trim())
-    .filter(l => l !== '');
-
-  if (!lines.length) return [];
-
-  const headers = lines[0].split(delim).map(h => h.trim());
-  const rows = [];
-
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(delim);
-    const obj = {};
-    headers.forEach((h, idx) => {
-      obj[h] = (cols[idx] ?? '').trim();
-    });
-    rows.push(obj);
+  // Se faltar algo essencial, não quebra a página
+  if (!el.grid || !el.category || !el.search) {
+    console.warn("Elementos de produtos não encontrados (search/category/grid).");
+    return;
   }
 
-  return rows;
-}
+  // ====== CONFIG ======
+  // Ajuste aqui se você trocar o caminho/nome do CSV no repositório
+  const PRODUCTS_CSV_URL = "products.csv";
+  const PROMO_IMAGE_URL = "imagem/promo_feijoada.png"; // se não existir, o popup some
 
-function normalizeKey(k) {
-  return (k || '').toString().trim().toLowerCase();
-}
+  // ====== STATE ======
+  let allProducts = [];
+  let visibleProducts = [];
 
-function firstOf(obj, keys) {
-  for (const k of keys) {
-    const v = obj[k];
-    if (v != null && String(v).trim() !== '') return v;
+  // ====== UTILS ======
+  function setHeaderOffset() {
+    if (!el.header) return;
+    // Atualiza a variável CSS --header-h para empurrar o conteúdo
+    const h = Math.ceil(el.header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty("--header-h", `${h}px`);
   }
-  return '';
-}
 
-function toNumberBR(v) {
-  const s = (v ?? '').toString().trim();
-  if (!s) return NaN;
-
-  // remove símbolos (€, etc), mantém números e separadores
-  const only = s.replace(/[^0-9.,-]/g, '');
-
-  // "1.234,56" -> remove pontos de milhar e troca vírgula por ponto
-  const cleaned = only.replace(/\./g, '').replace(',', '.');
-  const n = Number(cleaned);
-  return Number.isFinite(n) ? n : NaN;
-}
-
-function formatEuro(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return '';
-  return n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
-}
-
-function safeText(v) {
-  return (v ?? '').toString();
-}
-
-function imgPathFromCode(code) {
-  const c = (code || '').trim();
-  if (!c) return 'imagem/sem-imagem.png';
-  return `imagem/${c.toLowerCase()}.png`;
-}
-
-/* =========================
-   RENDER
-========================= */
-function buildCard(p) {
-  const img = imgPathFromCode(p.code);
-
-  const el = document.createElement('article');
-  el.className = 'card';
-  el.dataset.category = p.category;
-  el.dataset.search = `${p.code} ${p.category} ${p.name} ${p.brand} ${p.descIt}`.toLowerCase();
-
-  el.innerHTML = `
-    <div class="thumb">
-      <img src="${img}" alt="${safeText(p.name)}" loading="lazy" onerror="this.src='imagem/sem-imagem.png'" />
-    </div>
-    <div class="card-body">
-      <div class="meta-row">
-        <span class="badge code">Cód: ${safeText(p.code)}</span>
-        <span class="badge cat">${safeText(p.category)}</span>
-      </div>
-
-      <h3 class="product-name">${safeText(p.name)}</h3>
-
-      <div class="sub">
-        <div class="brand-line">${safeText(p.brand)}</div>
-        <div class="it-line">${safeText(p.descIt)}</div>
-      </div>
-
-      <div class="bottom-row">
-        <div class="col">
-          <div class="lbl">Qtd/caixa</div>
-          <div class="val">${safeText(p.qty)}</div>
-        </div>
-        <div class="col">
-          <div class="lbl">Valor unidade</div>
-          <div class="val">${formatEuro(p.price)}</div>
-        </div>
-      </div>
-    </div>
-  `;
-
-  return el;
-}
-
-function renderProducts(list) {
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  const frag = document.createDocumentFragment();
-  list.forEach(p => frag.appendChild(buildCard(p)));
-  grid.appendChild(frag);
-
-  if (statusEl) statusEl.textContent = `${list.length} produto(s)`;
-}
-
-function buildCategoryOptions(products) {
-  if (!categoryEl) return;
-
-  const set = new Set();
-  products.forEach(p => {
-    if (p.category) set.add(p.category);
-  });
-
-  const cats = Array.from(set).sort((a, b) => a.localeCompare(b));
-
-  categoryEl.innerHTML = '';
-
-  const optAll = document.createElement('option');
-  optAll.value = '';
-  optAll.textContent = 'Todas as categorias';
-  categoryEl.appendChild(optAll);
-
-  cats.forEach(c => {
-    const o = document.createElement('option');
-    o.value = c;
-    o.textContent = c;
-    categoryEl.appendChild(o);
-  });
-}
-
-function applyFilters() {
-  const q = (searchEl?.value || '').trim().toLowerCase();
-  const cat = categoryEl?.value || '';
-
-  const filtered = allProducts.filter(p => {
-    const okCat = !cat || p.category === cat;
-    if (!okCat) return false;
-    if (!q) return true;
-
-    return (`${p.code} ${p.category} ${p.name} ${p.brand} ${p.descIt}`)
+  function normalize(str) {
+    return String(str || "")
       .toLowerCase()
-      .includes(q);
-  });
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
 
-  renderProducts(filtered);
-}
+  function parseCSV(text) {
+    // Parser simples (suporta aspas e vírgulas dentro de aspas)
+    const rows = [];
+    let row = [];
+    let cur = "";
+    let inQuotes = false;
 
-/* =========================
-   PROMO (POPUP)
-========================= */
-function openPromo() {
-  if (!promoOverlay) return;
-  promoOverlay.classList.add('open');
-  promoOverlay.setAttribute('aria-hidden', 'false');
-}
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i + 1];
 
-function closePromo() {
-  if (!promoOverlay) return;
-  promoOverlay.classList.remove('open');
-  promoOverlay.setAttribute('aria-hidden', 'true');
-}
-
-/* =========================
-   PRINT
-   - NÃO altera DOM
-   - CSS @media print controla o que aparece
-========================= */
-function printCatalog() {
-  closePromo();
-  document.body.classList.add('print-mode');
-
-  requestAnimationFrame(() => {
-    window.print();
-  });
-}
-
-window.addEventListener('afterprint', () => {
-  document.body.classList.remove('print-mode');
-});
-
-/* =========================
-   INIT
-========================= */
-async function init() {
-  try {
-    if (!sessionStorage.getItem('promoShown')) {
-      openPromo();
-      sessionStorage.setItem('promoShown', '1');
+      if (ch === '"' && inQuotes && next === '"') {
+        cur += '"';
+        i++;
+        continue;
+      }
+      if (ch === '"') {
+        inQuotes = !inQuotes;
+        continue;
+      }
+      if (ch === "," && !inQuotes) {
+        row.push(cur);
+        cur = "";
+        continue;
+      }
+      if ((ch === "\n" || ch === "\r") && !inQuotes) {
+        if (ch === "\r" && next === "\n") i++;
+        row.push(cur);
+        rows.push(row);
+        row = [];
+        cur = "";
+        continue;
+      }
+      cur += ch;
     }
-  } catch {}
+    if (cur.length || row.length) {
+      row.push(cur);
+      rows.push(row);
+    }
 
-  promoClose?.addEventListener('click', closePromo);
-  promoOverlay?.addEventListener('click', (e) => {
-    if (e.target === promoOverlay) closePromo();
-  });
-  promoLink?.addEventListener('click', closePromo);
+    if (rows.length === 0) return [];
+    const headers = rows[0].map(h => normalize(h).trim());
+    const data = [];
 
-  const res = await fetch(CSV_PATH, { cache: 'no-store' });
-  const text = await res.text();
-  const raw = parseCSV(text);
+    for (let r = 1; r < rows.length; r++) {
+      const obj = {};
+      rows[r].forEach((val, c) => {
+        obj[headers[c] || `col_${c}`] = String(val || "").trim();
+      });
+      // Ignora linhas vazias
+      if (Object.values(obj).some(v => v !== "")) data.push(obj);
+    }
+    return data;
+  }
 
-  allProducts = raw
-    .map(r => {
-      const lower = {};
-      Object.keys(r).forEach(k => (lower[normalizeKey(k)] = r[k]));
+  function pick(obj, keys, fallback = "") {
+    for (const k of keys) {
+      if (obj[k] != null && String(obj[k]).trim() !== "") return String(obj[k]).trim();
+    }
+    return fallback;
+  }
 
-      const code = firstOf(lower, ['cod', 'cód', 'codigo', 'código', 'sku', 'id', 'code']);
-      const category = firstOf(lower, ['categoria', 'category', 'cat', 'grupo', 'linha']);
-      const name = firstOf(lower, ['produto', 'product', 'nome', 'name', 'descricao', 'descrição', 'descrizione']);
-      const brand = firstOf(lower, ['marca', 'brand', 'fabricante']);
-      const descIt = firstOf(lower, ['it', 'italiano', 'descrizione_it', 'desc_it', 'descricao_it', 'descrizione italiana']);
-      const qty = firstOf(lower, ['qtd/caixa', 'qtd', 'quantidade', 'qty', 'caixa', 'pack']);
-      const price = toNumberBR(
-        firstOf(lower, ['valor', 'preco', 'preço', 'unit', 'unitario', 'unitário', 'valor unidade', 'valor_unidade', 'price'])
+  function moneyEUR(v) {
+    const n = Number(String(v).replace(",", "."));
+    if (!Number.isFinite(n)) return "";
+    return n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
+  }
+
+  // ====== RENDER ======
+  function renderCategories(products) {
+    const current = el.category.value || "";
+    const cats = Array.from(
+      new Set(products.map(p => p.categoria).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+    el.category.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = "Todas as categorias";
+    el.category.appendChild(optAll);
+
+    for (const c of cats) {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      el.category.appendChild(opt);
+    }
+
+    // tenta manter seleção anterior
+    if ([...el.category.options].some(o => o.value === current)) {
+      el.category.value = current;
+    }
+  }
+
+  function cardHTML(p) {
+    const img = p.imagem || "";
+    const codigo = p.codigo || "";
+    const categoria = p.categoria || "";
+    const nome = p.nome || "";
+    const marca = p.marca || "";
+    const it = p.it || "";
+    const qtd = p.qtd || "";
+    const preco = p.preco || "";
+
+    const priceStr = moneyEUR(preco);
+    const qtdStr = qtd ? String(qtd) : "";
+
+    // img pode vir sem pasta: se estiver vazio, não renderiza tag
+    const imgTag = img
+      ? `<img src="${img}" alt="${nome}" loading="lazy" onerror="this.style.display='none'">`
+      : "";
+
+    return `
+      <article class="card">
+        <div class="card-img">${imgTag}</div>
+        <div class="card-body">
+          <div class="badges">
+            ${codigo ? `<span class="badge">Cód: ${codigo}</span>` : ""}
+            ${categoria ? `<span class="badge-cat">${categoria}</span>` : ""}
+          </div>
+
+          <div class="prod-name">${nome}</div>
+          ${marca ? `<div class="prod-brand">${marca}</div>` : ""}
+          ${it ? `<div class="prod-it">${it}</div>` : ""}
+
+          <div class="meta">
+            <div><div class="muted">Qtd/caixa</div><b>${qtdStr}</b></div>
+            <div style="text-align:right"><div class="muted">Valor unidade</div><b>${priceStr}</b></div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderGrid(products) {
+    el.grid.innerHTML = products.map(cardHTML).join("");
+    if (el.status) el.status.textContent = `${products.length} produto(s)`;
+  }
+
+  // ====== FILTER ======
+  function applyFilters() {
+    const q = normalize(el.search.value);
+    const cat = el.category.value;
+
+    visibleProducts = allProducts.filter(p => {
+      const okCat = !cat || p.categoria === cat;
+      if (!okCat) return false;
+      if (!q) return true;
+
+      const hay = normalize(
+        [p.nome, p.marca, p.it, p.categoria, p.codigo].filter(Boolean).join(" ")
       );
+      return hay.includes(q);
+    });
 
-      return { code, category, name, brand, descIt, qty, price };
-    })
-    .filter(p => p.code && p.name);
+    renderGrid(visibleProducts);
+  }
 
-  buildCategoryOptions(allProducts);
-  renderProducts(allProducts);
+  // ====== LOAD ======
+  async function loadProducts() {
+    try {
+      // cache bust para evitar "ficar piscando" em deploy
+      const url = `${PRODUCTS_CSV_URL}?v=${Date.now()}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Falha ao carregar CSV (${res.status})`);
+      const text = await res.text();
+      const rows = parseCSV(text);
 
-  searchEl?.addEventListener('input', applyFilters);
-  categoryEl?.addEventListener('change', applyFilters);
-  btnPrint?.addEventListener('click', printCatalog);
-}
+      // Mapeia colunas com nomes diferentes
+      allProducts = rows.map(r => {
+        const categoria = pick(r, ["categoria", "category", "categoria_do_produto"]);
+        const imagem = pick(r, ["imagem", "image", "img", "foto"]);
+        const codigo = pick(r, ["codigo", "cod", "código", "sku"]);
+        const nome = pick(r, ["nome", "produto", "name"]);
+        const marca = pick(r, ["marca", "brand"]);
+        const it = pick(r, ["it", "italiano", "descrizione", "descricao_it"]);
+        const qtd = pick(r, ["qtdcaixa", "qtd", "quantidade", "qtd/caixa"]);
+        const preco = pick(r, ["valorunidade", "preco", "preço", "valor", "valor unidade"]);
 
-init().catch(err => {
-  console.error('Erro ao inicializar:', err);
-  if (statusEl) statusEl.textContent = 'Erro ao carregar catálogo.';
-});
+        return {
+          categoria,
+          imagem,
+          codigo,
+          nome,
+          marca,
+          it,
+          qtd,
+          preco,
+        };
+      });
+
+      renderCategories(allProducts);
+      visibleProducts = [...allProducts];
+      renderGrid(visibleProducts);
+      applyFilters(); // garante status correto
+    } catch (err) {
+      console.error(err);
+      if (el.status) el.status.textContent = "Erro ao carregar produtos.";
+    }
+  }
+
+  // ====== PROMO POPUP ======
+  function initPromo() {
+    if (!el.promoOverlay || !el.promoImg || !el.promoClose) return;
+
+    el.promoImg.src = PROMO_IMAGE_URL;
+
+    // Se a imagem não existir, o popup não aparece e não deixa "erro" no final
+    el.promoImg.onerror = () => {
+      el.promoOverlay.remove();
+    };
+
+    el.promoClose.addEventListener("click", () => {
+      el.promoOverlay.classList.remove("open");
+      try { sessionStorage.setItem("promoClosed", "1"); } catch (_) {}
+    });
+
+    el.promoOverlay.addEventListener("click", (e) => {
+      if (e.target === el.promoOverlay) el.promoClose.click();
+    });
+
+    // Aparece 1x por sessão
+    let closed = false;
+    try { closed = sessionStorage.getItem("promoClosed") === "1"; } catch (_) {}
+    if (!closed) el.promoOverlay.classList.add("open");
+  }
+
+  // ====== PRINT / PDF ======
+  function initPrint() {
+    if (!el.btnPrint) return;
+    el.btnPrint.addEventListener("click", () => {
+      // Só chama o print: a CSS @media print controla o que aparece
+      window.print();
+    });
+  }
+
+  // ====== EVENTS ======
+  el.search.addEventListener("input", applyFilters);
+  el.category.addEventListener("change", applyFilters);
+  window.addEventListener("resize", setHeaderOffset);
+
+  // ====== START ======
+  setHeaderOffset();
+  initPromo();
+  initPrint();
+  loadProducts();
+})();
