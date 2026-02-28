@@ -694,3 +694,76 @@ h2{
     visibility: hidden !important;
   }
 }
+
+/* =========================
+   PRINT FINAL (A4) - cabeçalho imagem + produtos + rodapé
+   (não depende de background)
+========================= */
+@media print {
+
+  @page { size: A4 portrait; margin: 6mm; }
+
+  /* esconde tudo */
+  body * { visibility: hidden !important; }
+
+  /* não imprime o header fixo do site */
+  .header { display: none !important; }
+
+  /* container não pode ter padding do header fixo */
+  .container { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+
+  /* ====== MOSTRA O CABEÇALHO DE IMPRESSÃO ====== */
+  #printHeader { 
+    visibility: visible !important;
+    display: block !important;
+    margin: 0 0 4mm 0 !important;
+    padding: 0 !important;
+  }
+
+  /* mostra apenas a imagem do cabeçalho e troca para cabecalho_impressao.png */
+  #printHeader img {
+    visibility: visible !important;
+    display: block !important;
+    content: url("imagem/cabecalho_impressao.png");
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* esconde os textos internos do printHeader (fica só a imagem) */
+  #printHeader div { display: none !important; }
+
+  /* ====== MOSTRA PRODUTOS ====== */
+  #produtos, #produtos * { visibility: visible !important; }
+
+  /* não imprime a barra de busca/filtro */
+  #produtos .controls, #produtos .controls * { display: none !important; }
+
+  /* não imprime o título "Produtos" (ganha espaço) */
+  #produtos .title-row { display: none !important; }
+
+  /* 5 por linha */
+  #grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 4mm !important;
+    align-items: start !important;
+  }
+
+  /* evita quebrar card no meio */
+  .product-card { break-inside: avoid; page-break-inside: avoid; }
+
+  /* ====== MOSTRA RODAPÉ ====== */
+  footer.footer, footer.footer * {
+    visibility: visible !important;
+    display: block !important;
+  }
+
+  footer.footer { margin-top: 6mm !important; }
+
+  /* garante que "Quem somos" e "Contato" NÃO imprimam */
+  #quem-somos, #quem-somos *,
+  #contato, #contato * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
