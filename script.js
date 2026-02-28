@@ -1,21 +1,20 @@
 /* =========================================================
-   Terra dei Pappagalli - script.js (COMPLETO, compatível com seu HTML)
-   HTML IDs esperados:
+   Terra dei Pappagalli - script.js (COMPLETO)
+   Compatível com seu HTML:
    - #grid      (container dos cards)
-   - #search    (input de busca)
-   - #category  (select de categorias)
-   - #status    (texto "Carregando..." / contador)
-   - #btnPrint  (botão salvar em PDF) [opcional]
-   - #printHeader (header de impressão) [opcional]
+   - #search    (input busca)
+   - #category  (select categoria)
+   - #status    (contador / "Carregando...")
+   - #btnPrint  (botão PDF) [opcional]
    ========================================================= */
 
-const CSV_URL = "./products.csv"; // seu products.csv está na raiz do repo
+const CSV_URL = "./products.csv";
 
 let allProducts = [];
 let filteredProducts = [];
 
 // Elementos
-let elGrid, elSearch, elCategory, elStatus, elBtnPrint, elPrintHeader;
+let elGrid, elSearch, elCategory, elStatus, elBtnPrint;
 
 /* -----------------------------
    Utilidades
@@ -28,6 +27,15 @@ function normalize(str) {
     .trim();
 }
 
+function esc(s) {
+  return String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function pick(obj, keys) {
   for (const k of keys) {
     if (obj && Object.prototype.hasOwnProperty.call(obj, k)) {
@@ -38,16 +46,7 @@ function pick(obj, keys) {
   return "";
 }
 
-function esc(s) {
-  return String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-/** Converte "€ 2,27" / "2,27" / "2.27" em moeda */
+/** Converte "€ 2,27" / "2,27" / "2.27" em moeda EUR */
 function moneyEUR(v) {
   const raw = String(v ?? "").trim();
   if (!raw) return "";
@@ -61,11 +60,15 @@ function moneyEUR(v) {
   return n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
 }
 
+function setStatus(msg) {
+  if (elStatus) elStatus.textContent = msg;
+}
+
 /* -----------------------------
    CSV Parser (detecta ; ou ,)
 ----------------------------- */
 function parseCSV(text) {
-  const t = String(text ?? "").replace(/^\uFEFF/, ""); // remove BOM
+  const t = String(text ?? "").replace(/^\uFEFF/, "");
   if (!t.trim()) return [];
 
   const firstLine = t.split(/\r?\n/)[0] || "";
@@ -82,27 +85,20 @@ function parseCSV(text) {
     const ch = t[i];
     const next = t[i + 1];
 
-    // "" dentro de aspas vira "
     if (ch === '"' && inQuotes && next === '"') {
       cur += '"';
       i++;
       continue;
     }
-
-    // alterna aspas
     if (ch === '"') {
       inQuotes = !inQuotes;
       continue;
     }
-
-    // separador
     if (ch === DELIM && !inQuotes) {
       row.push(cur);
       cur = "";
       continue;
     }
-
-    // fim de linha
     if ((ch === "\n" || ch === "\r") && !inQuotes) {
       if (ch === "\r" && next === "\n") i++;
       row.push(cur);
@@ -111,17 +107,14 @@ function parseCSV(text) {
       cur = "";
       continue;
     }
-
     cur += ch;
   }
 
-  // última linha
   if (cur.length || row.length) {
     row.push(cur);
     rows.push(row);
   }
-
-  if (rows.length === 0) return [];
+  if (!rows.length) return [];
 
   const headers = rows[0].map(h => normalize(h));
   const data = [];
@@ -131,21 +124,53 @@ function parseCSV(text) {
     rows[r].forEach((val, c) => {
       obj[headers[c] || `col_${c}`] = String(val ?? "").trim();
     });
-
-    // pula linha vazia
     if (Object.values(obj).some(v => v !== "")) data.push(obj);
   }
-
   return data;
 }
 
 /* -----------------------------
-   UI helpers
+   Carregar produtos do CSV
 ----------------------------- */
-function setStatus(msg) {
-  if (elStatus) elStatus.textContent = msg;
+async function loadProducts() {
+  setStatus("Carregando...");
+
+  const res = await fetch(CSV_URL, { cache: "no-store" });
+  if (!res.ok) throw new Error(`CSV fetch falhou (${res.status})`);
+
+  const csvText = await res.text();
+  const rows = parseCSV(csvText);
+
+  // Headers esperados:
+  // imagem,codigo,categoria,nome,descricao,qtd_caixa,valor_un,Italiano
+  allProducts = rows.map(r => {
+    let imagem = pick(r, ["imagem"]);
+    const codigo = pick(r, ["codigo"]);
+    const categoria = pick(r, ["categoria"]);
+    const nome = pick(r, ["nome"]);
+    const descricao = pick(r, ["descricao"]);
+    const italiano = pick(r, ["italiano"]); // "Italiano" vira "italiano"
+    const qtdCaixa = pick(r, ["qtd_caixa", "qtdcaixa", "qtd", "quantidade"]);
+    const valorUn = pick(r, ["valor_un", "valorun", "valor", "preco", "preço"]);
+
+    // Normaliza imagem: "x.png" => "imagem/x.png"
+    if (imagem && !imagem.includes("/") && !imagem.startsWith("http")) {
+      imagem = `imagem/${imagem}`;
+    }
+
+    return { imagem, codigo, categoria, nome, descricao, italiano, qtdCaixa, valorUn };
+  });
+
+  filteredProducts = [...allProducts];
+  populateCategories(allProducts);
+  renderProducts(filteredProducts);
+
+  setStatus(`${filteredProducts.length} prodotto(i)`);
 }
 
+/* -----------------------------
+   Categorias
+----------------------------- */
 function populateCategories(items) {
   if (!elCategory) return;
 
@@ -153,11 +178,9 @@ function populateCategories(items) {
     new Set(items.map(p => (p.categoria || "").trim()).filter(Boolean))
   ).sort((a, b) => a.localeCompare(b, "it"));
 
-  // Mantém a primeira opção do HTML (se existir)
-  const firstOpt = elCategory.querySelector("option");
-  const firstHTML = firstOpt ? firstOpt.outerHTML : `<option value="">Tutte le categorie</option>`;
-
-  elCategory.innerHTML = firstHTML;
+  // mantém a opção inicial do HTML (ex.: "Tutte le categorie")
+  const first = elCategory.querySelector("option")?.outerHTML;
+  elCategory.innerHTML = first || `<option value="">Tutte le categorie</option>`;
 
   for (const c of cats) {
     const opt = document.createElement("option");
@@ -167,6 +190,9 @@ function populateCategories(items) {
   }
 }
 
+/* -----------------------------
+   Filtros
+----------------------------- */
 function applyFilters() {
   const q = normalize(elSearch?.value ?? "");
   const cat = String(elCategory?.value ?? "").trim();
@@ -189,7 +215,7 @@ function applyFilters() {
 }
 
 /* -----------------------------
-   Render
+   Render (FORMATO BONITO PADRÃO)
 ----------------------------- */
 function renderProducts(items) {
   if (!elGrid) return;
@@ -203,43 +229,41 @@ function renderProducts(items) {
 
   for (const p of items) {
     const card = document.createElement("article");
-
-    // IMPORTANTÍSSIMO:
-    // Seu CSS original do repo usa classes "card", "card-img", etc.
-    // (pelo que eu vi no seu script anterior).
-    // Vou manter esse padrão para bater com o seu CSS atual.
-    card.className = "card";
+    card.className = "product-card";
 
     const nome = p.nome || "";
     const categoria = p.categoria || "";
-    const it = p.italiano || "";
-    const desc = p.descricao || "";
+    const codigo = p.codigo || "";
+    const descricao = p.descricao || "";
+    const italiano = p.italiano || "";
     const qtd = p.qtdCaixa || "";
     const preco = moneyEUR(p.valorUn) || "";
 
     const imgSrc = p.imagem ? esc(p.imagem) : "";
 
     card.innerHTML = `
-      <div class="card-img">
+      <div class="product-image">
         ${imgSrc ? `<img src="${imgSrc}" alt="${esc(nome)}" loading="lazy">` : ""}
       </div>
 
-      <div class="card-body">
-        ${categoria ? `<div class="badge-cat">${esc(categoria)}</div>` : ""}
-        <div class="prod-name">${esc(nome)}</div>
-        ${it ? `<div class="prod-it">${esc(it)}</div>` : ""}
-        ${desc ? `<div class="prod-desc">${esc(desc)}</div>` : ""}
-      </div>
+      <div class="product-body">
+        <div class="badges">
+          ${codigo ? `<span class="badge">Cód: ${esc(codigo)}</span>` : ""}
+          ${categoria ? `<span class="badge category">${esc(categoria)}</span>` : ""}
+        </div>
 
-      <div class="card-footer">
-        <div class="meta">
-          <div class="meta-left">
-            <div class="meta-label">Qtd/caixa</div>
-            <div class="meta-value">${esc(qtd)}</div>
+        <div class="product-title">${esc(nome)}</div>
+        ${descricao ? `<div class="product-desc">${esc(descricao)}</div>` : ""}
+        ${italiano ? `<div class="product-it">${esc(italiano)}</div>` : ""}
+
+        <div class="prices">
+          <div>
+            <div class="k">Qtd/caixa</div>
+            <div class="v">${esc(qtd)}</div>
           </div>
-          <div class="meta-right">
-            <div class="meta-label">Valor unidade</div>
-            <div class="meta-value">${esc(preco)}</div>
+          <div>
+            <div class="k">Valor unidade</div>
+            <div class="v">${esc(preco)}</div>
           </div>
         </div>
       </div>
@@ -250,61 +274,21 @@ function renderProducts(items) {
 }
 
 /* -----------------------------
-   Carregamento do CSV e mapeamento
------------------------------ */
-async function loadProducts() {
-  setStatus("Carregando...");
-
-  const res = await fetch(CSV_URL, { cache: "no-store" });
-  if (!res.ok) throw new Error(`CSV fetch falhou (${res.status})`);
-
-  const csvText = await res.text();
-  const rows = parseCSV(csvText);
-
-  // Seus headers: imagem,codigo,categoria,nome,descricao,qtd_caixa,valor_un,Italiano
-  allProducts = rows.map(r => {
-    let imagem = pick(r, ["imagem"]);
-    const codigo = pick(r, ["codigo"]);
-    const categoria = pick(r, ["categoria"]);
-    const nome = pick(r, ["nome"]);
-    const descricao = pick(r, ["descricao"]);
-    const italiano = pick(r, ["italiano"]); // "Italiano" vira "italiano" no normalize
-    const qtdCaixa = pick(r, ["qtd_caixa", "qtdcaixa", "qtd", "quantidade"]);
-    const valorUn = pick(r, ["valor_un", "valorun", "valor", "preco", "preço"]);
-
-    // Normaliza caminho de imagem (pasta "imagem" na raiz do repo)
-    if (imagem && !imagem.includes("/") && !imagem.startsWith("http")) {
-      imagem = `imagem/${imagem}`;
-    }
-
-    return { imagem, codigo, categoria, nome, descricao, italiano, qtdCaixa, valorUn };
-  });
-
-  filteredProducts = [...allProducts];
-
-  populateCategories(allProducts);
-  renderProducts(filteredProducts);
-  setStatus(`${filteredProducts.length} prodotto(i)`);
-}
-
-/* -----------------------------
-   Print
+   PDF
 ----------------------------- */
 function doPrint() {
   window.print();
 }
 
 /* -----------------------------
-   INIT (compatível com seu HTML)
+   Init
 ----------------------------- */
 async function init() {
-  // IDs conforme seu DevTools:
   elGrid = document.getElementById("grid");
   elSearch = document.getElementById("search");
   elCategory = document.getElementById("category");
   elStatus = document.getElementById("status");
   elBtnPrint = document.getElementById("btnPrint");
-  elPrintHeader = document.getElementById("printHeader"); // opcional
 
   if (elSearch) elSearch.addEventListener("input", applyFilters);
   if (elCategory) elCategory.addEventListener("change", applyFilters);
