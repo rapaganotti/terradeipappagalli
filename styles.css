@@ -508,29 +508,65 @@ h2{
 }
 
 /* =========================
-   PRINT
+   PRINT AJUSTADO (A4 + 5 colunas + topo mais alto)
 ========================= */
-@media print{
-  /* esconde elementos marcados como "no-print" */
-  .no-print, .no-print *{ display:none !important; }
+@media print {
 
-  /* header fixo não vai pro PDF */
-  .header{ display:none !important; }
-
-  /* mostra cabeçalho de impressão e a seção de produtos */
-  .print-only{ display:block !important; visibility:visible !important; }
-  #printHeader, #printHeader *{ visibility:visible !important; }
-
-  #produtos, #produtos *{ visibility:visible !important; }
-
-  /* coloca o catálogo no topo */
-  #produtos{
-    position:relative;
-    width:100%;
-    padding:0;
-    margin:0;
+  /* A4 e margens menores (faz caber mais conteúdo) */
+  @page {
+    size: A4;
+    margin: 8mm; /* ajuste: 6mm a 10mm */
   }
 
-  /* evita cortar card no meio */
-  .product-card{ break-inside: avoid; page-break-inside: avoid; }
+  /* remove qualquer “respiro” extra */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* tira padding do container (no site ele empurra pra baixo por causa do header fixo) */
+  .container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  /* diminui o espaço da seção produtos */
+  #produtos.section {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* tira o título "Produtos" do miolo do PDF (opcional, mas ajuda a subir tudo) */
+  #produtos .title-row {
+    margin: 0 0 6mm 0 !important;
+  }
+
+  /* deixa o cabeçalho de impressão mais “alto” (menos espaço ocupado) */
+  #printHeader {
+    margin: 0 0 6mm 0 !important; /* antes estava “gordo” visualmente */
+    padding: 0 !important;
+  }
+
+  /* ✅ força 5 produtos por linha no PDF */
+  #grid.grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 10px !important; /* menor pra caber melhor */
+  }
+
+  /* se ainda estiver grande, reduz um pouco os cards no print */
+  .product-card {
+    border-radius: 10px !important;
+  }
+
+  .product-title { font-size: 14px !important; }
+  .product-desc, .product-it { font-size: 10px !important; }
+  .prices .k { font-size: 9px !important; }
+  .prices .v { font-size: 12px !important; font-weight: 800 !important; }
+
+  /* imagens mais controladas no print */
+  .product-image {
+    height: 110px !important; /* ajuste fino */
+    object-fit: contain !important;
+  }
 }
