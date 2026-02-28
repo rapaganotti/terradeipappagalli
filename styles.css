@@ -156,6 +156,8 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 20px); }
   width: 56px;          /* ↑ ícone maior */
   height: 56px;
   flex: 0 0 56px;
+  background: transparent;
+
 }
 
 h2{
