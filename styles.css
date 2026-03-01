@@ -28,25 +28,27 @@ img { max-width: 100%; display: block; }
 
 .muted { color: var(--muted); }
 
+/* Evita “pulos” ao clicar no menu quando header é fixo */
+section[id] { scroll-margin-top: calc(var(--header-h) + 20px); }
+
+
 /* =========================
-   HEADER
+   HEADER FIXO (TELA)
 ========================= */
 .header{
   position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 50;
-  background: #fff;
+  top: 0; left: 0;
+  width: 100%;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
   border-bottom: 1px solid var(--border);
 }
 
 .header-inner{
+  padding: 14px 34px 10px 34px;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 14px 34px 10px 34px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
 }
 
 .brand{
@@ -62,141 +64,163 @@ img { max-width: 100%; display: block; }
 
 .brand-text h1{
   font-size: 24px;
-  line-height: 1.1;
-  color: var(--green);
-  font-weight: 800;
+  line-height: 1.05;
+  color: #163c2f;
+  margin-bottom: 2px;
 }
-.brand-text .sub{
+
+.descriptor{
   font-size: 14px;
   color: var(--muted);
-  margin-top: 2px;
 }
 
 .nav{
+  margin-top: 12px;
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 26px;
+  flex-wrap: wrap;
 }
 
-.nav a{
+/* links do menu: PT verde, IT vermelho */
+.nav-link{
   text-decoration: none;
   color: var(--green);
-  font-weight: 800;
-}
-.nav a .it{
-  display:block;
-  color: var(--red);
   font-weight: 700;
-  margin-top: 2px;
-  font-style: italic;
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.05;
 }
 
+.nav-link .it{
+  color: var(--red);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+/* Botão PDF */
 .btn{
-  border: 1px solid var(--border);
-  background: #f6f6f6;
-  padding: 10px 14px;
+  margin-left: auto;
+  background: #f2f2f2;
+  border: 1px solid #dedede;
+  padding: 9px 16px;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 800;
-}
-.btn .it{
-  display:block;
-  color: var(--red);
-  font-style: italic;
   font-weight: 700;
-  margin-top: 2px;
+  color: var(--text);
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.05;
 }
 
-.container{
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: calc(var(--header-h) + 18px) 34px 40px 34px;
+.btn .it{
+  color: var(--red);
+  font-weight: 400;
+  margin-top: 2px;
 }
 
 /* =========================
-   SEÇÕES / TÍTULOS
+   CONTEÚDO (abaixo do header fixo)
+========================= */
+.container{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 22px) 34px 60px 34px;
+}
+
+/* Responsivo */
+@media (max-width: 900px){
+  .header-inner{ padding: 14px 18px 10px 18px; }
+  .container{ padding: calc(var(--header-h) + 18px) 18px 50px 18px; }
+  .logo{ width: 110px; }
+  .brand-text h1{ font-size: 20px; }
+}
+
+/* =========================
+   SEÇÕES (Quem somos / Produtos / Contato)
 ========================= */
 .section{
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 22px 22px;
-  box-shadow: var(--shadow);
-  margin-bottom: 22px;
+  background: transparent;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(0,0,0,.06);
 }
 
 .title-row{
-  display:flex;
-  align-items:flex-start;
-  gap:14px;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 10px;
 }
 
-.section-icon{
-  width: 54px;
-  height: auto;
+.section-icon {
+  width: 56px;         /* ↑ ícone maior */
+  height: 56px;
+  background: transparent;
+
 }
 
-.title-row h2{
-  font-size: 32px;
-  line-height: 1.05;
-  font-weight: 900;
-  color: #000;
+
+h2{
+  font-size: 34px;
+  line-height: 1.08;
 }
 
 .it-sub{
-  color: var(--red);
-  font-style: italic;
-  font-weight: 700;
   margin-top: 4px;
+  color: var(--red);     /* italiano vermelho */
+  font-style: italic;
 }
 
-/* “Quadrado verde” do texto em italiano */
-.green-box, .quadrado{
+/* Texto com entrelinha menor (PT e IT) */
+.section p,
+.section li{
+  font-size: 16px;
+  line-height: 1.45;     /* ↓ entrelinha menor */
+  color: var(--text);
+}
+
+.section p{ margin: 10px 0; }
+
+.section strong{ font-weight: 800; }
+
+/* Caixa verde (texto em italiano / destaque) */
+.green-box{
   background: #e9fdeb;
   border: 1px solid #cfe9d2;
   border-radius: 14px;
+  width: 90%;          /* ocupa 80% */
+  max-width: 1600px;
   padding: 14px 18px;
-  margin-top: 14px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* (se você quiser ele menor/centralizado, use width + margin auto aqui)
-.green-box, .quadrado{
-  width: 80%;
-  max-width: 900px;
-  margin: 14px auto;
-}
-*/
+.green-box .it-sub{ color: var(--red); }
+
 
 /* =========================
    PRODUTOS (filtro + grid)
 ========================= */
-.controls{
-  display:flex;
-  align-items:center;
+.products-toolbar{
+  display: flex;
+  align-items: center;
   gap: 12px;
-  margin: 10px 0 16px 0;
   flex-wrap: wrap;
+  margin: 10px 0 14px 0;
 }
 
-.controls input[type="text"]{
-  width: 260px;
-  max-width: 100%;
-  border:1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
+.products-toolbar input[type="text"],
+.products-toolbar select{
+  height: 34px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: #fff;
   outline: none;
 }
 
-.controls select{
-  width: 260px;
-  max-width: 100%;
-  border:1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
-  outline:none;
-  background:#fff;
-}
+.products-toolbar input[type="text"]{ width: 220px; }
+.products-toolbar select{ min-width: 260px; }
 
 .products-count{
   color: var(--muted);
@@ -211,87 +235,83 @@ img { max-width: 100%; display: block; }
   align-items: start;
 }
 
-/* Alias do grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(5, minmax(0, 1fr));
-  gap:18px;
-  align-items:start;
-}
-
 /* Responsivo */
 @media (max-width: 1200px){
-  .products-grid, .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .products-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 900px){
-  .header-inner{ padding: 12px 18px; }
-  .container{ padding: calc(var(--header-h) + 16px) 18px 36px 18px; }
-  .products-grid, .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .products-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 520px){
-  .products-grid, .grid{ grid-template-columns: 1fr; }
+  .products-grid{ grid-template-columns: 1fr; }
 }
 
-/* =========================
-   CARD DO PRODUTO
-========================= */
 .product-card{
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 16px;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 .product-image{
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #ffffff; /* se quiser transparente: background: transparent; */
+  background: #ffffff;
   border-bottom: 1px solid rgba(0,0,0,.06);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .product-image img{
-  max-width: 90%;
-  max-height: 90%;
+  width: 85%;
+  height: 85%;
   object-fit: contain;
 }
 
 .product-body{
-  padding: 16px 18px 16px 18px; /* mais “respiro” */
+  padding: 14px 18px 16px 14px;
 }
 
 .badges{
-  display:flex;
+  display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
+/* badge “Cód” */
 .badge{
-  display:inline-block;
-  padding: 6px 10px;
+  font-size: 10px;
   border-radius: 999px;
-  border: 1px solid rgba(44,91,30,.18);
-  background: rgba(233,253,235,.75);
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--green);
+  padding: 6px 10px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: #eef3ff;
+  color: #1b1b1b;
 }
 
+/* badge “categoria” (VERDE, SEM CORTAR) */
 .badge.category{
-  border-color: rgba(44,91,30,.12);
-  background: rgba(233,253,235,.6);
-  font-weight: 800;
+  background: #e9fdeb;
+  border: 1px solid #cfe9d2;
+  color: var(--green);
+  font-weight: 400;
+
+  /* >>> o que impede cortar <<< */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .product-title{
-  font-size: 13px;     /* ↓ diminui um pouquinho */
-  font-weight: 800;    /* ↓ menos “pesado” */
+  font-size: 14px;
+  font-weight: 900;
   letter-spacing: .2px;
   margin: 6px 0 6px 0;
-  line-height: 1.15;
 }
 
 .product-desc{
@@ -301,14 +321,14 @@ img { max-width: 100%; display: block; }
 }
 
 .product-it{
-  color: var(--muted);
-  font-size: 12px;
+  color: #666;
   font-style: italic;
+  font-size: 11px;
   margin-bottom: 10px;
 }
 
 .prices{
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 12px;
   border-top: 1px solid rgba(0,0,0,.08);
@@ -322,44 +342,94 @@ img { max-width: 100%; display: block; }
 
 .prices .v{
   font-weight: 900;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* =========================
    CONTATO
 ========================= */
 .contact-grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
-  margin-top: 14px;
+  margin-top: 10px;
 }
+
 @media (max-width: 900px){
   .contact-grid{ grid-template-columns: 1fr; }
 }
 
-.contact-card h3{
-  color: var(--green);
-  font-size: 20px;
-  margin-bottom: 6px;
-  font-weight: 900;
-}
-.contact-card a{
-  color: var(--text);
-  text-decoration: none;
-}
-.contact-card a:hover{
-  text-decoration: underline;
-}
-.it-inline{
-  color: var(--red);
-  font-style: italic;
-  font-weight: 700;
+.contact-card{
+  background: transparent;
+  padding: 10px 0;
 }
 
+.contact-card h3{
+  color: var(--green);     /* títulos verdes */
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.contact-card a{
+  color: var(--green);
+  text-decoration: none;
+}
+
+.contact-card .it{
+  color: var(--red);       /* italiano vermelho */
+}
+
+
 /* =========================
-   FOOTER
+   ALIASES (HTML atual)
+   - Mantém compatibilidade com classes do index.html
 ========================= */
+.controls{ /* alias do toolbar */
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin:10px 0 14px 0;
+}
+.controls input[type="text"],
+.controls select{
+  height:34px;
+  border:1px solid #dcdcdc;
+  border-radius:8px;
+  padding:0 10px;
+  background:#fff;
+  outline:none;
+}
+.controls input[type="text"]{ width:220px; }
+.controls select{ min-width:260px; }
+
+.grid{ /* alias do grid de produtos */
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:18px;
+  align-items:start;
+}
+@media (max-width:1400px){ .grid{ grid-template-columns:repeat(4, minmax(0, 1fr)); } }
+@media (max-width:1100px){ .grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
+@media (max-width:800px){ .grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+@media (max-width:500px){ .grid{ grid-template-columns:1fr; } }
+
+.status{ color:var(--muted); font-size:14px; }
+
+.quadrado{ /* alias da caixa verde */
+  background:#e9fdeb;
+  border:1px solid #cfe9d2;
+  border-radius:14px;
+  padding:16px 18px;
+  margin-top:14px;
+  align-self: center;
+}
+.quadrado .it-sub{ color:var(--red); }
+
+.it-inline{ color:var(--red); font-style:italic; }
+.no-print{}
+.print-only{ display:none; }
+
 .footer{
   margin-top: 50px;
   border-top: 1px solid var(--border);
@@ -371,27 +441,20 @@ img { max-width: 100%; display: block; }
   padding: 30px 34px; /* mesma margem lateral do header-inner */
 }
 
-/* Footer alinhado à esquerda */
-.footer .brand{
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
 /* Tamanho do logo do rodapé */
 .logo_prodotti{
   width: 220px;      /* ajuste aqui */
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 0;         /* garante que não centralize */
 }
 
-/* Responsivo footer */
+/* Responsivo: acompanha o padding do header no mobile */
 @media (max-width: 900px){
   .footer-inner{ padding: 24px 18px; }
   .logo_prodotti{ width: 180px; }
 }
+
 
 /* =========================
    POPUP PROMO
@@ -399,128 +462,75 @@ img { max-width: 100%; display: block; }
 #promoOverlay{
   position:fixed;
   inset:0;
-  background: rgba(0,0,0,.55);
+  background:rgba(0,0,0,.55);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index: 100;
+  padding:18px;
+  z-index:10000;
 }
+#promoOverlay.open{ display:flex; }
 
 #promoBox{
+  position:relative;
+  width:min(920px, 100%);
   background:#fff;
-  border-radius: 18px;
-  padding: 18px;
-  width: min(780px, 92vw);
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
-
-#promoBox img{
+#promoImg{
   width:100%;
   height:auto;
-  border-radius: 14px;
+  display:block;
 }
-
 #promoClose{
-  margin-top: 12px;
-  width:100%;
-  border:none;
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-weight: 900;
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.15);
+  background:rgba(255,255,255,.92);
   cursor:pointer;
-  background: #f1f1f1;
+  font-size:26px;
+  line-height:1;
+}
+
+
+/* =========================
+   CABEÇALHO SÓ PARA IMPRESSÃO
+========================= */
+/* Se existir um bloco/elemento de impressão, ele NÃO aparece na tela */
+.print-header{
+  display: none !important;
 }
 
 /* =========================
-   UTILITÁRIOS
-========================= */
-.no-print{}
-
-/* =========================
-   PRINT (A4) - só catálogo
-   Cabeçalho (imagem) + Produtos (grid) + Rodapé (logos)
-   Observação: o cabeçalho usa <img> (não background), para não depender
-   de "Imprimir gráficos de fundo" do navegador.
+   PRINT
 ========================= */
 @media print{
+  /* esconde elementos marcados como "no-print" */
+  .no-print, .no-print *{ display:none !important; }
 
-  @page{ size: A4 portrait; margin: 6mm; }
-
-  /* esconde tudo por padrão */
-  body *{ visibility: hidden !important; }
-
-  /* não imprime o header fixo do site */
+  /* header fixo não vai pro PDF */
   .header{ display:none !important; }
 
-  /* remove espaçamentos que derrubam o conteúdo */
-  html, body{ background:#fff !important; }
-  .container{ padding:0 !important; margin:0 !important; max-width:none !important; }
+  /* mostra cabeçalho de impressão e a seção de produtos */
+  .print-only{ display:block !important; visibility:visible !important; }
+  #printHeader, #printHeader *{ visibility:visible !important; }
 
-  /* ===== Cabeçalho de impressão ===== */
-  #printHeader{
-    visibility: visible !important;
-    display:block !important;
-    margin:0 0 4mm 0 !important;
-    padding:0 !important;
+  #produtos, #produtos *{ visibility:visible !important; }
+
+  /* coloca o catálogo no topo */
+  #produtos{
+    position:relative;
+    width:100%;
+    padding:0;
+    margin:0;
   }
 
-  /* força a imagem do cabeçalho de impressão */
-  #printHeader img{
-    visibility: visible !important;
-    display:block !important;
-    content: url("imagem/cabecalho_impressao.png");
-    width:100% !important;
-    height:auto !important;
-  }
-
-  /* esconde textos do printHeader, se existirem */
-  #printHeader div{ display:none !important; }
-
-  /* ===== Produtos ===== */
-  #produtos, #produtos *{ visibility: visible !important; }
-
-  /* não imprime barra de busca/filtro/contador */
-  #produtos .controls, #produtos .controls *{ display:none !important; }
-
-  /* opcional: não imprimir o título "Produtos" (ganha espaço) */
-  #produtos .title-row{ display:none !important; }
-
-  /* 5 por linha */
-  #grid{
-    display:grid !important;
-    grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
-    gap:4mm !important;
-    align-items:start !important;
-  }
-
-  .product-card{
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  /* compacta um pouco para caber mais por página */
-  .product-image{ height: 22mm !important; }
-  .product-body{ padding: 8px 10px 10px 10px !important; }
-  .product-title{ font-size: 12px !important; }
-  .product-desc{ font-size: 10px !important; }
-  .product-it{ font-size: 9px !important; }
-  .prices .k{ font-size: 8px !important; }
-  .prices .v{ font-size: 11px !important; font-weight: 800 !important; }
-
-  /* ===== Rodapé ===== */
-  footer.footer, footer.footer *{
-    visibility: visible !important;
-    display:block !important;
-  }
-  footer.footer{ margin-top: 6mm !important; }
-
-  /* garante que a classe no-print não esconda o footer no PDF */
-  footer.footer.no-print, footer.footer.no-print *{ display:block !important; }
-
-  /* não imprime outras seções */
-  #quem-somos, #quem-somos *,
-  #contato, #contato *{
-    display:none !important;
-    visibility:hidden !important;
-  }
+  /* evita cortar card no meio */
+  .product-card{ break-inside: avoid; page-break-inside: avoid; }
 }
