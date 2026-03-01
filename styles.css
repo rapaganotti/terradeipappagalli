@@ -504,7 +504,7 @@ h2{
 ========================= */
 /* Se existir um bloco/elemento de impressão, ele NÃO aparece na tela */
 .print-header{
-  display: none !important;
+  display: none;
 }
 
 /* =========================
@@ -533,4 +533,74 @@ h2{
 
   /* evita cortar card no meio */
   .product-card{ break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* =========================
+Ele garante: cabeçalho aparece, 5 colunas no PDF, usa a página inteira, e card não quebra (nem foto numa página e texto em outra)
+========================= */
+
+
+@media print{
+  /* Página e fundo */
+  @page { size: A4; margin: 8mm; }
+  html, body { background: #fff !important; }
+
+  /* Some tudo que é de tela */
+  .no-print, .no-print *{ display:none !important; }
+  .header{ display:none !important; }
+
+  /* Container não pode manter o padding do header fixo */
+  .container{
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Cabeçalho e rodapé do PDF */
+  .print-only{ display:block !important; visibility:visible !important; }
+  .print-header{ display:block !important; margin: 0 0 8mm 0 !important; }
+  .print-header-img{
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .print-footer{
+    margin-top: 8mm !important;
+    text-align: center !important;
+  }
+  .print-footer-img{
+    width: 220px;
+    max-width: 60%;
+    height: auto;
+    display: inline-block;
+  }
+
+  /* Produtos: força 5 por linha no PDF (independente do responsivo) */
+  .products-grid, .grid{
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  /* Não quebrar card (foto+texto juntos) */
+  .product-card{
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Ajuda a caber melhor na página */
+  .product-body{ padding: 10px 10px 12px 10px !important; }
+  .product-title{ font-size: 12px !important; }
+  .product-desc{ font-size: 10px !important; }
+  .product-it{ font-size: 10px !important; }
+  .prices .k{ font-size: 10px !important; }
+  .prices .v{ font-size: 12px !important; }
+
+  /* Mantém imagem proporcional e reduz chance de overflow */
+  .product-image img{
+    width: 90% !important;
+    height: 90% !important;
+    object-fit: contain !important;
+  }
 }
