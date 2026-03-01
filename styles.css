@@ -28,27 +28,25 @@ img { max-width: 100%; display: block; }
 
 .muted { color: var(--muted); }
 
-/* Evita “pulos” ao clicar no menu quando header é fixo */
-section[id] { scroll-margin-top: calc(var(--header-h) + 20px); }
-
-
 /* =========================
-   HEADER FIXO (TELA)
+   HEADER
 ========================= */
 .header{
   position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  background: rgba(255,255,255,.96);
-  backdrop-filter: blur(6px);
-  z-index: 9999;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  background: #fff;
   border-bottom: 1px solid var(--border);
 }
 
 .header-inner{
-  padding: 14px 34px 10px 34px;
   max-width: 1400px;
   margin: 0 auto;
+  padding: 14px 34px 10px 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
 }
 
 .brand{
@@ -64,163 +62,141 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 20px); }
 
 .brand-text h1{
   font-size: 24px;
-  line-height: 1.05;
-  color: #163c2f;
-  margin-bottom: 2px;
+  line-height: 1.1;
+  color: var(--green);
+  font-weight: 800;
 }
-
-.descriptor{
+.brand-text .sub{
   font-size: 14px;
   color: var(--muted);
+  margin-top: 2px;
 }
 
 .nav{
-  margin-top: 12px;
   display: flex;
   align-items: center;
-  gap: 26px;
-  flex-wrap: wrap;
+  gap: 28px;
 }
 
-/* links do menu: PT verde, IT vermelho */
-.nav-link{
+.nav a{
   text-decoration: none;
   color: var(--green);
-  font-weight: 700;
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 1.05;
+  font-weight: 800;
 }
-
-.nav-link .it{
+.nav a .it{
+  display:block;
   color: var(--red);
-  font-weight: 400;
-  margin-top: 2px;
-}
-
-/* Botão PDF */
-.btn{
-  margin-left: auto;
-  background: #f2f2f2;
-  border: 1px solid #dedede;
-  padding: 9px 16px;
-  border-radius: 10px;
-  cursor: pointer;
   font-weight: 700;
-  color: var(--text);
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 1.05;
-}
-
-.btn .it{
-  color: var(--red);
-  font-weight: 400;
   margin-top: 2px;
-}
-
-/* =========================
-   CONTEÚDO (abaixo do header fixo)
-========================= */
-.container{
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: calc(var(--header-h) + 22px) 34px 60px 34px;
-}
-
-/* Responsivo */
-@media (max-width: 900px){
-  .header-inner{ padding: 14px 18px 10px 18px; }
-  .container{ padding: calc(var(--header-h) + 18px) 18px 50px 18px; }
-  .logo{ width: 110px; }
-  .brand-text h1{ font-size: 20px; }
-}
-
-/* =========================
-   SEÇÕES (Quem somos / Produtos / Contato)
-========================= */
-.section{
-  background: transparent;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(0,0,0,.06);
-}
-
-.title-row{
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-
-.section-icon {
-  width: 56px;         /* ↑ ícone maior */
-  height: 56px;
-  background: transparent;
-
-}
-
-
-h2{
-  font-size: 34px;
-  line-height: 1.08;
-}
-
-.it-sub{
-  margin-top: 4px;
-  color: var(--red);     /* italiano vermelho */
   font-style: italic;
 }
 
-/* Texto com entrelinha menor (PT e IT) */
-.section p,
-.section li{
-  font-size: 16px;
-  line-height: 1.45;     /* ↓ entrelinha menor */
-  color: var(--text);
+.btn{
+  border: 1px solid var(--border);
+  background: #f6f6f6;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 800;
+}
+.btn .it{
+  display:block;
+  color: var(--red);
+  font-style: italic;
+  font-weight: 700;
+  margin-top: 2px;
 }
 
-.section p{ margin: 10px 0; }
+.container{
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 18px) 34px 40px 34px;
+}
 
-.section strong{ font-weight: 800; }
+/* =========================
+   SEÇÕES / TÍTULOS
+========================= */
+.section{
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 22px;
+}
 
-/* Caixa verde (texto em italiano / destaque) */
-.green-box{
+.title-row{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom: 12px;
+}
+
+.section-icon{
+  width: 54px;
+  height: auto;
+}
+
+.title-row h2{
+  font-size: 32px;
+  line-height: 1.05;
+  font-weight: 900;
+  color: #000;
+}
+
+.it-sub{
+  color: var(--red);
+  font-style: italic;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* “Quadrado verde” do texto em italiano */
+.green-box, .quadrado{
   background: #e9fdeb;
   border: 1px solid #cfe9d2;
   border-radius: 14px;
-  width: 90%;          /* ocupa 80% */
-  max-width: 1600px;
   padding: 14px 18px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 14px;
 }
 
-.green-box .it-sub{ color: var(--red); }
-
+/* (se você quiser ele menor/centralizado, use width + margin auto aqui)
+.green-box, .quadrado{
+  width: 80%;
+  max-width: 900px;
+  margin: 14px auto;
+}
+*/
 
 /* =========================
    PRODUTOS (filtro + grid)
 ========================= */
-.products-toolbar{
-  display: flex;
-  align-items: center;
+.controls{
+  display:flex;
+  align-items:center;
   gap: 12px;
+  margin: 10px 0 16px 0;
   flex-wrap: wrap;
-  margin: 10px 0 14px 0;
 }
 
-.products-toolbar input[type="text"],
-.products-toolbar select{
-  height: 34px;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  padding: 0 10px;
-  background: #fff;
+.controls input[type="text"]{
+  width: 260px;
+  max-width: 100%;
+  border:1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
   outline: none;
 }
 
-.products-toolbar input[type="text"]{ width: 220px; }
-.products-toolbar select{ min-width: 260px; }
+.controls select{
+  width: 260px;
+  max-width: 100%;
+  border:1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline:none;
+  background:#fff;
+}
 
 .products-count{
   color: var(--muted);
@@ -235,83 +211,87 @@ h2{
   align-items: start;
 }
 
-/* Responsivo */
-@media (max-width: 1200px){
-  .products-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 900px){
-  .products-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 520px){
-  .products-grid{ grid-template-columns: 1fr; }
+/* Alias do grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:18px;
+  align-items:start;
 }
 
+/* Responsivo */
+@media (max-width: 1200px){
+  .products-grid, .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px){
+  .header-inner{ padding: 12px 18px; }
+  .container{ padding: calc(var(--header-h) + 16px) 18px 36px 18px; }
+  .products-grid, .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px){
+  .products-grid, .grid{ grid-template-columns: 1fr; }
+}
+
+/* =========================
+   CARD DO PRODUTO
+========================= */
 .product-card{
   background: var(--card);
-  border: 1px solid rgba(0,0,0,.08);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
 .product-image{
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #ffffff;
+  background: #ffffff; /* se quiser transparente: background: transparent; */
   border-bottom: 1px solid rgba(0,0,0,.06);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
 .product-image img{
-  width: 85%;
-  height: 85%;
+  max-width: 90%;
+  max-height: 90%;
   object-fit: contain;
 }
 
 .product-body{
-  padding: 14px 18px 16px 14px;
+  padding: 16px 18px 16px 18px; /* mais “respiro” */
 }
 
 .badges{
-  display: flex;
+  display:flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-/* badge “Cód” */
 .badge{
-  font-size: 10px;
-  border-radius: 999px;
+  display:inline-block;
   padding: 6px 10px;
-  border: 1px solid rgba(0,0,0,.10);
-  background: #eef3ff;
-  color: #1b1b1b;
+  border-radius: 999px;
+  border: 1px solid rgba(44,91,30,.18);
+  background: rgba(233,253,235,.75);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--green);
 }
 
-/* badge “categoria” (VERDE, SEM CORTAR) */
 .badge.category{
-  background: #e9fdeb;
-  border: 1px solid #cfe9d2;
-  color: var(--green);
-  font-weight: 400;
-
-  /* >>> o que impede cortar <<< */
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  max-width: 100%;
+  border-color: rgba(44,91,30,.12);
+  background: rgba(233,253,235,.6);
+  font-weight: 800;
 }
 
 .product-title{
-  font-size: 14px;
-  font-weight: 900;
+  font-size: 13px;     /* ↓ diminui um pouquinho */
+  font-weight: 800;    /* ↓ menos “pesado” */
   letter-spacing: .2px;
   margin: 6px 0 6px 0;
+  line-height: 1.15;
 }
 
 .product-desc{
@@ -321,14 +301,14 @@ h2{
 }
 
 .product-it{
-  color: #666;
+  color: var(--muted);
+  font-size: 12px;
   font-style: italic;
-  font-size: 11px;
   margin-bottom: 10px;
 }
 
 .prices{
-  display: grid;
+  display:grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 12px;
   border-top: 1px solid rgba(0,0,0,.08);
@@ -342,94 +322,44 @@ h2{
 
 .prices .v{
   font-weight: 900;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* =========================
    CONTATO
 ========================= */
 .contact-grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
-  margin-top: 10px;
+  margin-top: 14px;
 }
-
 @media (max-width: 900px){
   .contact-grid{ grid-template-columns: 1fr; }
 }
 
-.contact-card{
-  background: transparent;
-  padding: 10px 0;
-}
-
 .contact-card h3{
-  color: var(--green);     /* títulos verdes */
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-.contact-card a{
   color: var(--green);
+  font-size: 20px;
+  margin-bottom: 6px;
+  font-weight: 900;
+}
+.contact-card a{
+  color: var(--text);
   text-decoration: none;
 }
-
-.contact-card .it{
-  color: var(--red);       /* italiano vermelho */
+.contact-card a:hover{
+  text-decoration: underline;
 }
-
+.it-inline{
+  color: var(--red);
+  font-style: italic;
+  font-weight: 700;
+}
 
 /* =========================
-   ALIASES (HTML atual)
-   - Mantém compatibilidade com classes do index.html
+   FOOTER
 ========================= */
-.controls{ /* alias do toolbar */
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin:10px 0 14px 0;
-}
-.controls input[type="text"],
-.controls select{
-  height:34px;
-  border:1px solid #dcdcdc;
-  border-radius:8px;
-  padding:0 10px;
-  background:#fff;
-  outline:none;
-}
-.controls input[type="text"]{ width:220px; }
-.controls select{ min-width:260px; }
-
-.grid{ /* alias do grid de produtos */
-  display:grid;
-  grid-template-columns:repeat(5, minmax(0, 1fr));
-  gap:18px;
-  align-items:start;
-}
-@media (max-width:1400px){ .grid{ grid-template-columns:repeat(4, minmax(0, 1fr)); } }
-@media (max-width:1100px){ .grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); } }
-@media (max-width:800px){ .grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); } }
-@media (max-width:500px){ .grid{ grid-template-columns:1fr; } }
-
-.status{ color:var(--muted); font-size:14px; }
-
-.quadrado{ /* alias da caixa verde */
-  background:#e9fdeb;
-  border:1px solid #cfe9d2;
-  border-radius:14px;
-  padding:16px 18px;
-  margin-top:14px;
-  align-self: center;
-}
-.quadrado .it-sub{ color:var(--red); }
-
-.it-inline{ color:var(--red); font-style:italic; }
-.no-print{}
-.print-only{ display:none; }
-
 .footer{
   margin-top: 50px;
   border-top: 1px solid var(--border);
@@ -441,20 +371,27 @@ h2{
   padding: 30px 34px; /* mesma margem lateral do header-inner */
 }
 
+/* Footer alinhado à esquerda */
+.footer .brand{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 /* Tamanho do logo do rodapé */
 .logo_prodotti{
   width: 220px;      /* ajuste aqui */
   max-width: 100%;
   height: auto;
   display: block;
+  margin: 0;         /* garante que não centralize */
 }
 
-/* Responsivo: acompanha o padding do header no mobile */
+/* Responsivo footer */
 @media (max-width: 900px){
   .footer-inner{ padding: 24px 18px; }
   .logo_prodotti{ width: 180px; }
 }
-
 
 /* =========================
    POPUP PROMO
@@ -462,308 +399,128 @@ h2{
 #promoOverlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.55);
+  background: rgba(0,0,0,.55);
   display:none;
   align-items:center;
   justify-content:center;
-  padding:18px;
-  z-index:10000;
+  z-index: 100;
 }
-#promoOverlay.open{ display:flex; }
 
 #promoBox{
-  position:relative;
-  width:min(920px, 100%);
   background:#fff;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  border-radius: 18px;
+  padding: 18px;
+  width: min(780px, 92vw);
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
 }
-#promoImg{
+
+#promoBox img{
   width:100%;
   height:auto;
-  display:block;
+  border-radius: 14px;
 }
+
 #promoClose{
-  position:absolute;
-  top:10px;
-  right:10px;
-  width:40px;
-  height:40px;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,.15);
-  background:rgba(255,255,255,.92);
+  margin-top: 12px;
+  width:100%;
+  border:none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 900;
   cursor:pointer;
-  font-size:26px;
-  line-height:1;
-}
-
-
-/* =========================
-   CABEÇALHO SÓ PARA IMPRESSÃO
-========================= */
-/* Se existir um bloco/elemento de impressão, ele NÃO aparece na tela */
-.print-header{
-  display: none !important;
+  background: #f1f1f1;
 }
 
 /* =========================
-   PRINT AJUSTADO (A4 + 5 colunas + topo mais alto)
+   UTILITÁRIOS
 ========================= */
-@media print {
-
-  /* A4 e margens menores (faz caber mais conteúdo) */
-  @page {
-    size: A4;
-    margin: 8mm; /* ajuste: 6mm a 10mm */
-  }
-
-  /* remove qualquer “respiro” extra */
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* tira padding do container (no site ele empurra pra baixo por causa do header fixo) */
-  .container {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: none !important;
-  }
-
-  /* diminui o espaço da seção produtos */
-  #produtos.section {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  /* tira o título "Produtos" do miolo do PDF (opcional, mas ajuda a subir tudo) */
-  #produtos .title-row {
-    margin: 0 0 6mm 0 !important;
-  }
-
-  /* deixa o cabeçalho de impressão mais “alto” (menos espaço ocupado) */
-  #printHeader {
-    margin: 0 0 6mm 0 !important; /* antes estava “gordo” visualmente */
-    padding: 0 !important;
-  }
-
-  /* ✅ força 5 produtos por linha no PDF */
-  #grid.grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    gap: 10px !important; /* menor pra caber melhor */
-  }
-
-  /* se ainda estiver grande, reduz um pouco os cards no print */
-  .product-card {
-    border-radius: 10px !important;
-  }
-
-  .product-title { font-size: 14px !important; }
-  .product-desc, .product-it { font-size: 10px !important; }
-  .prices .k { font-size: 9px !important; }
-  .prices .v { font-size: 12px !important; font-weight: 800 !important; }
-
-  /* imagens mais controladas no print */
-  .product-image {
-    height: 110px !important; /* ajuste fino */
-    object-fit: contain !important;
-  }
-}
+.no-print{}
 
 /* =========================
    PRINT (A4) - só catálogo
    Cabeçalho (imagem) + Produtos (grid) + Rodapé (logos)
+   Observação: o cabeçalho usa <img> (não background), para não depender
+   de "Imprimir gráficos de fundo" do navegador.
 ========================= */
 @media print{
 
-  /* A4 e margens */
-  @page{
-    size: A4 portrait;
-    margin: 10mm;
-  }
+  @page{ size: A4 portrait; margin: 6mm; }
 
-  /* some tudo por padrão */
-  body *{
-    visibility: hidden !important;
-  }
+  /* esconde tudo por padrão */
+  body *{ visibility: hidden !important; }
 
-  /* some header fixo da tela (pra não “empurrar” conteúdo) */
-  .header{
-    display: none !important;
-  }
+  /* não imprime o header fixo do site */
+  .header{ display:none !important; }
 
-  /* remove fundo cinza e paddings que atrapalham no PDF */
-  html, body{
-    background: #fff !important;
-  }
-  .container{
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: none !important;
-  }
+  /* remove espaçamentos que derrubam o conteúdo */
+  html, body{ background:#fff !important; }
+  .container{ padding:0 !important; margin:0 !important; max-width:none !important; }
 
-  /* =========================
-     MOSTRAR: PRINT HEADER (mas usando PNG)
-  ========================= */
+  /* ===== Cabeçalho de impressão ===== */
   #printHeader{
     visibility: visible !important;
-    display: block !important;
-
-    /* usa a imagem do cabeçalho de impressão */
-    background: url("imagem/cabecalho_impressao.PNG") no-repeat top left !important;
-    background-size: contain !important;
-
-    /* altura do cabeçalho (ajuste fino se precisar) */
-    height: 38mm !important;
-
-    /* espaçamento depois do cabeçalho */
-    margin: 0 0 6mm 0 !important;
-    padding: 0 !important;
+    display:block !important;
+    margin:0 0 4mm 0 !important;
+    padding:0 !important;
   }
 
-  /* esconde o conteúdo interno do printHeader (vai ficar só o PNG no fundo) */
-  #printHeader *{
-    display: none !important;
-  }
-
-  /* =========================
-     MOSTRAR: PRODUTOS
-  ========================= */
-  #produtos, #produtos *{
+  /* força a imagem do cabeçalho de impressão */
+  #printHeader img{
     visibility: visible !important;
+    display:block !important;
+    content: url("imagem/cabecalho_impressao.png");
+    width:100% !important;
+    height:auto !important;
   }
 
-  /* não mostrar barra de busca/combos na impressão */
-  #produtos .controls,
-  #produtos .controls *{
-    display: none !important;
-  }
+  /* esconde textos do printHeader, se existirem */
+  #printHeader div{ display:none !important; }
 
-  /* coloca produtos logo abaixo do cabeçalho */
-  #produtos{
-    margin: 0 !important;
-    padding: 0 !important;
-  }
+  /* ===== Produtos ===== */
+  #produtos, #produtos *{ visibility: visible !important; }
 
-  /* 5 por linha no A4 */
+  /* não imprime barra de busca/filtro/contador */
+  #produtos .controls, #produtos .controls *{ display:none !important; }
+
+  /* opcional: não imprimir o título "Produtos" (ganha espaço) */
+  #produtos .title-row{ display:none !important; }
+
+  /* 5 por linha */
   #grid{
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    gap: 6mm !important;
-    align-items: start !important;
+    display:grid !important;
+    grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+    gap:4mm !important;
+    align-items:start !important;
   }
 
-  /* evita cortar card no meio */
   .product-card{
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
-  /* =========================
-     MOSTRAR: RODAPÉ (mesmo da página)
-     Seu footer tem "no-print", então aqui a gente “reabilita” só ele
-  ========================= */
-  footer.footer,
-  footer.footer *{
+  /* compacta um pouco para caber mais por página */
+  .product-image{ height: 22mm !important; }
+  .product-body{ padding: 8px 10px 10px 10px !important; }
+  .product-title{ font-size: 12px !important; }
+  .product-desc{ font-size: 10px !important; }
+  .product-it{ font-size: 9px !important; }
+  .prices .k{ font-size: 8px !important; }
+  .prices .v{ font-size: 11px !important; font-weight: 800 !important; }
+
+  /* ===== Rodapé ===== */
+  footer.footer, footer.footer *{
     visibility: visible !important;
-    display: block !important;
+    display:block !important;
   }
+  footer.footer{ margin-top: 6mm !important; }
 
-  /* empurra o rodapé pro final (sem fixar) */
-  footer.footer{
-    margin-top: 10mm !important;
-  }
+  /* garante que a classe no-print não esconda o footer no PDF */
+  footer.footer.no-print, footer.footer.no-print *{ display:block !important; }
 
-  /* se existir classe no-print no footer, não deixa ela esconder */
-  footer.footer.no-print,
-  footer.footer.no-print *{
-    display: block !important;
-  }
-
-  /* opcional: diminuir um pouco a imagem do rodapé no PDF */
-  .logo_prodotti{
-    max-width: 160mm !important;
-    height: auto !important;
-  }
-
-  /* garante que “Quem somos” e “Contato” não apareçam mesmo */
+  /* não imprime outras seções */
   #quem-somos, #quem-somos *,
   #contato, #contato *{
-    display: none !important;
-    visibility: hidden !important;
-  }
-}
-
-/* =========================
-   PRINT FINAL (A4) - cabeçalho imagem + produtos + rodapé
-   (não depende de background)
-========================= */
-@media print {
-
-  @page { size: A4 portrait; margin: 6mm; }
-
-  /* esconde tudo */
-  body * { visibility: hidden !important; }
-
-  /* não imprime o header fixo do site */
-  .header { display: none !important; }
-
-  /* container não pode ter padding do header fixo */
-  .container { padding: 0 !important; margin: 0 !important; max-width: none !important; }
-
-  /* ====== MOSTRA O CABEÇALHO DE IMPRESSÃO ====== */
-  #printHeader { 
-    visibility: visible !important;
-    display: block !important;
-    margin: 0 0 4mm 0 !important;
-    padding: 0 !important;
-  }
-
-  /* mostra apenas a imagem do cabeçalho e troca para cabecalho_impressao.png */
-  #printHeader img {
-    visibility: visible !important;
-    display: block !important;
-    content: url("imagem/cabecalho_impressao.png");
-    width: 100% !important;
-    height: auto !important;
-  }
-
-  /* esconde os textos internos do printHeader (fica só a imagem) */
-  #printHeader div { display: none !important; }
-
-  /* ====== MOSTRA PRODUTOS ====== */
-  #produtos, #produtos * { visibility: visible !important; }
-
-  /* não imprime a barra de busca/filtro */
-  #produtos .controls, #produtos .controls * { display: none !important; }
-
-  /* não imprime o título "Produtos" (ganha espaço) */
-  #produtos .title-row { display: none !important; }
-
-  /* 5 por linha */
-  #grid {
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-    gap: 4mm !important;
-    align-items: start !important;
-  }
-
-  /* evita quebrar card no meio */
-  .product-card { break-inside: avoid; page-break-inside: avoid; }
-
-  /* ====== MOSTRA RODAPÉ ====== */
-  footer.footer, footer.footer * {
-    visibility: visible !important;
-    display: block !important;
-  }
-
-  footer.footer { margin-top: 6mm !important; }
-
-  /* garante que "Quem somos" e "Contato" NÃO imprimam */
-  #quem-somos, #quem-somos *,
-  #contato, #contato * {
-    display: none !important;
-    visibility: hidden !important;
+    display:none !important;
+    visibility:hidden !important;
   }
 }
